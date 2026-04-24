@@ -42,15 +42,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
-function createInfoBlock(label, value) {
-  return `
-    <div class="info-block">
-      <span class="info-label">${escapeHtml(label)}</span>
-      <div class="info-value">${escapeHtml(value || "-")}</div>
-    </div>
-  `;
-}
-
 function formatLabel(value) {
   const raw = cleanNotionText(value);
   if (!raw) return "";
@@ -110,6 +101,73 @@ function formatHours(value) {
   return raw.toLowerCase().includes("heure") ? raw : `${raw} heures`;
 }
 
+function shouldShowFormateurs(formatDisplay) {
+  const value = cleanNotionText(formatDisplay).toLowerCase();
+  return !value.includes("classe virtuelle") && !value.includes("présentiel") && !value.includes("presentiel");
+}
+
+function isZeroOrEmptyDuration(value) {
+  const raw = cleanNotionText(value);
+  if (!raw) return true;
+
+  const normalized = raw.replace(",", ".").trim();
+  const number = Number(normalized);
+
+  if (!Number.isNaN(number)) {
+    return number === 0;
+  }
+
+  return raw === "0";
+}
+
+function getTypeEppHelpContent() {
+  return `
+    <div class="info-popover-title">Type d’EPP</div>
+    <p><strong>Audit clinique</strong> : démarche qui compare les pratiques à des références pour identifier des pistes d’amélioration.</p>
+    <p><strong>Vignette clinique</strong> : cas pratique permettant d’analyser le raisonnement et les choix professionnels.</p>
+    <p><strong>Aucune</strong> : la formation ne comporte pas de modalité EPP spécifique dans cette rubrique.</p>
+  `;
+}
+
+function getTypologieHelpContent() {
+  return `
+    <div class="info-popover-title">Typologie</div>
+    <p><strong>Formation continue</strong> : temps de formation destiné à actualiser ou renforcer les connaissances et compétences.</p>
+    <p><strong>Évaluation des pratiques professionnelles</strong> : démarche qui permet d’analyser sa pratique pour l’améliorer.</p>
+    <p><strong>Programme intégré</strong> : formation qui combine un temps de formation continue et un temps d’évaluation des pratiques professionnelles.</p>
+  `;
+}
+
+function createInfoBlock(label, value, options = {}) {
+  const helpType = options.helpType || "";
+  const popoverContent =
+    helpType === "type-epp"
+      ? getTypeEppHelpContent()
+      : helpType === "typologie"
+        ? getTypologieHelpContent()
+        : "";
+
+  return `
+    <div class="info-block">
+      <div class="info-label-row">
+        <span class="info-label">${escapeHtml(label)}</span>
+        ${helpType ? `
+          <button
+            type="button"
+            class="info-help-button"
+            aria-label="Afficher une aide sur ${escapeHtml(label)}"
+            aria-expanded="false"
+          >ⓘ</button>
+          <div class="info-popover" hidden>
+            ${popoverContent}
+          </div>
+        ` : ""}
+      </div>
+      <div class="info-value">${escapeHtml(value || "-")}</div>
+    </div>
+  `;
+}
+
 function createContextBlock(contexte, index) {
   if (!contexte) return "";
 
@@ -156,18 +214,64 @@ function getUnitData(item, unitNumber) {
   };
 }
 
-function isZeroOrEmptyDuration(value) {
-  const raw = cleanNotionText(value);
-  if (!raw) return true;
+function pluralize(count, singular, plural) {
+  return count > 1 ? plural : singular;
+}
 
-  const normalized = raw.replace(",", ".").trim();
-  const number = Number(normalized);
+function countMatching(units, predicate) {
+  return units.filter(predicate).length;
+}
 
-  if (!Number.isNaN(number)) {
-    return number === 0;
+function summarizeArticulation(units) {
+  if (!units.length) return "";
+
+  const unitCount = units.length;
+
+  const countFC = countMatching(units, unit => unit.typologie === "Formation continue");
+  const countAudit = countMatching(units, unit => unit.typologie === "Audit clinique");
+  const countVignette = countMatching(units, unit => unit.typologie === "Vignette clinique");
+  const countEpp = countMatching(units, unit => unit.typologie === "Évaluation des pratiques professionnelles");
+  const countElearning = countMatching(units, unit => unit.format === "E-learning");
+  const countCV = countMatching(units, unit => unit.format === "Classe virtuelle");
+  const countPresentiel = countMatching(units, unit => unit.format === "Présentiel");
+
+  if (countAudit || countVignette || countEpp) {
+    const parts = [];
+
+    if (countFC) {
+      parts.push(`${countFC} ${pluralize(countFC, "temps", "temps")} de formation continue`);
+    }
+    if (countAudit) {
+      parts.push(`${countAudit} ${pluralize(countAudit, "temps", "temps")} d’audit clinique`);
+    }
+    if (countVignette) {
+      parts.push(`${countVignette} ${pluralize(countVignette, "temps", "temps")} de vignette clinique`);
+    }
+    if (countEpp) {
+      parts.push(`${countEpp} ${pluralize(countEpp, "temps", "temps")} d’évaluation des pratiques professionnelles`);
+    }
+
+    return `Cette formation s’articule en ${unitCount} ${pluralize(unitCount, "étape", "étapes")} : ${parts.join(" et ")}.`;
   }
 
-  return raw === "0";
+  const formatOrder = units.map(unit => unit.format).filter(Boolean);
+  if (formatOrder.length >= 2) {
+    const readableParts = formatOrder.map((format, index) => {
+      const prefix = index === 0 ? "1 partie en" : "puis 1 partie en";
+      const article = /^[aeiouéèêëàâîïôöùûü]/i.test(format) ? "en" : "en";
+      if (prefix === "1 partie en") return `1 partie ${article} ${format.toLowerCase()}`;
+      return `puis 1 partie ${article} ${format.toLowerCase()}`;
+    });
+
+    return `Cette formation s’articule en ${unitCount} ${pluralize(unitCount, "étape", "étapes")} : ${readableParts.join(" ")}.`;
+  }
+
+  return `Cette formation s’articule en ${unitCount} ${pluralize(unitCount, "étape", "étapes")}.`;
+}
+
+function createStepBadge(value, className) {
+  if (!value) return "";
+  return `<span class="step-badge ${className}">${escapeHtml(value)}</span>`;
 }
 
 function createArticulationBlock(item) {
@@ -183,28 +287,38 @@ function createArticulationBlock(item) {
   }
 
   const units = [u1, u2, u3].filter(unit => unit && !isZeroOrEmptyDuration(unit.dureeRaw));
-
   if (!units.length) return "";
 
-  const unitsHtml = units.map(unit => {
-    return `
-      <div class="articulation-item">
-        <h3 class="articulation-item-title">${escapeHtml(unit.unit)}</h3>
-        <div class="articulation-lines">
-          ${unit.typologie ? `<div class="articulation-line"><strong>Typologie :</strong> ${escapeHtml(unit.typologie)}</div>` : ""}
-          ${unit.format ? `<div class="articulation-line"><strong>Format :</strong> ${escapeHtml(unit.format)}</div>` : ""}
-          ${unit.duree ? `<div class="articulation-line"><strong>Durée :</strong> ${escapeHtml(unit.duree)}</div>` : ""}
+  const summary = summarizeArticulation(units);
+
+  const stepsHtml = units.map((unit, index) => {
+    const stepHtml = `
+      <div class="articulation-step">
+        <h3 class="articulation-step-title">${escapeHtml(unit.unit)}</h3>
+        <div class="step-badges">
+          ${createStepBadge(unit.typologie, "step-badge-typologie")}
+          ${createStepBadge(unit.format, "step-badge-format")}
+          ${createStepBadge(unit.duree, "step-badge-duree")}
         </div>
       </div>
     `;
+
+    if (index < units.length - 1) {
+      return `${stepHtml}<div class="articulation-arrow" aria-hidden="true">→</div>`;
+    }
+
+    return stepHtml;
   }).join("");
 
   return `
     <div class="section-block">
       <div class="section-inner">
-        <span class="section-title">Articulation de la formation</span>
-        <div class="articulation-grid">
-          ${unitsHtml}
+        <div class="section-title-row">
+          <span class="section-title">Articulation de la formation</span>
+        </div>
+        <p class="articulation-summary">${escapeHtml(summary)}</p>
+        <div class="articulation-timeline">
+          ${stepsHtml}
         </div>
       </div>
     </div>
@@ -235,9 +349,37 @@ function bindContextToggles() {
   });
 }
 
-function shouldShowFormateurs(formatDisplay) {
-  const value = cleanNotionText(formatDisplay).toLowerCase();
-  return !value.includes("classe virtuelle") && !value.includes("présentiel") && !value.includes("presentiel");
+function closeAllPopovers() {
+  document.querySelectorAll(".info-popover").forEach(popover => {
+    popover.hidden = true;
+  });
+
+  document.querySelectorAll(".info-help-button").forEach(button => {
+    button.setAttribute("aria-expanded", "false");
+  });
+}
+
+function bindInfoPopovers() {
+  const buttons = document.querySelectorAll(".info-help-button");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      const popover = button.parentElement.querySelector(".info-popover");
+      if (!popover) return;
+
+      const isOpen = !popover.hidden;
+      closeAllPopovers();
+
+      if (!isOpen) {
+        popover.hidden = false;
+        button.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+
+  document.addEventListener("click", closeAllPopovers);
 }
 
 function renderCards(data) {
@@ -352,8 +494,8 @@ function renderCards(data) {
           ${createInfoBlock("Numéro de dépôt", numeroDepot)}
           ${createInfoBlock("Public concerné", publicConcerne.length ? publicConcerne.join(", ") : "-")}
           ${createInfoBlock("Format", formatDisplay || "-")}
-          ${createInfoBlock("Typologie", typologieDisplay || "-")}
-          ${createInfoBlock("Type d’EPP", typeEppDisplay || "-")}
+          ${createInfoBlock("Typologie", typologieDisplay || "-", { helpType: "typologie" })}
+          ${createInfoBlock("Type d’EPP", typeEppDisplay || "-", { helpType: "type-epp" })}
           ${createInfoBlock("Durée totale", dureeTotale || "-")}
           ${createInfoBlock("ODPC", odpc || "-")}
           ${showFormateurs ? createInfoBlock("Formateur(s)", formateurs || "-") : ""}
@@ -368,6 +510,7 @@ function renderCards(data) {
   }).join("");
 
   bindContextToggles();
+  bindInfoPopovers();
 }
 
 function applyFilters() {
