@@ -273,7 +273,7 @@ function createContextBlock(contexte, index) {
   return `
     <div class="section-block">
       <div class="section-inner">
-        <span class="section-title">Contexte</span>
+        <span class="section-title">Contexte de la formation</span>
         <p id="${textId}" class="context-text ${shouldCollapse ? "is-collapsed" : ""}">${safeText}</p>
       </div>
       ${shouldCollapse ? `
