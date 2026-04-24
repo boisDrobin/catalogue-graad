@@ -1,0 +1,164 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f5f7fb;
+  color: #1f2937;
+}
+
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 32px 0 24px;
+}
+
+.container {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 28px 0 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-group input,
+.filter-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  font-size: 14px;
+}
+
+.topbar {
+  margin-bottom: 18px;
+}
+
+#results-count {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.cards {
+  display: grid;
+  gap: 18px;
+  padding-bottom: 40px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(17, 24, 39, 0.04);
+}
+
+.card-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px 18px;
+}
+
+.info-block {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.info-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.info-value {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #111827;
+  word-break: break-word;
+}
+
+.empty-state {
+  background: #ffffff;
+  border: 1px dashed #d1d5db;
+  border-radius: 18px;
+  padding: 28px;
+  text-align: center;
+  color: #6b7280;
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 26px;
+  }
+
+  .card-title {
+    font-size: 19px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+}

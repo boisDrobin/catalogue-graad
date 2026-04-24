@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogue des formations</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>Catalogue des formations</h1>
+      <p class="subtitle">
+        Catalogue interne mis à jour à partir d’un export Notion
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="filters">
+      <div class="filter-group">
+        <label for="search">Recherche</label>
+        <input
+          type="text"
+          id="search"
+          placeholder="Rechercher par titre, numéro, public..."
+        >
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-format">Format</label>
+        <select id="filter-format">
+          <option value="">Tous</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-public">Public concerné</label>
+        <select id="filter-public">
+          <option value="">Tous</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-typologie">Typologie</label>
+        <select id="filter-typologie">
+          <option value="">Toutes</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="topbar">
+      <p id="results-count">Chargement...</p>
+    </section>
+
+    <section id="results" class="cards"></section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
