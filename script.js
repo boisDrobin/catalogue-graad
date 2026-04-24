@@ -61,6 +61,9 @@ function formatLabel(value) {
     "PI": "Programme intégré",
     "EPP": "Évaluation des pratiques professionnelles",
     "CV": "Classe virtuelle",
+    "VC": "Vignette clinique",
+    "NA (FC)": "Aucune",
+    "NA(FC)": "Aucune",
     "ELEARNING": "E-learning",
     "E-LEARNING": "E-learning",
     "PRÉSENTIEL": "Présentiel",
@@ -145,7 +148,7 @@ function getUnitData(item, unitNumber) {
   if (!typologie && !format && !dureeRaw) return null;
 
   return {
-    unit: `U${unitNumber}`,
+    unit: `U${unitNumber} (Étape ${unitNumber})`,
     typologie,
     format,
     duree,
@@ -230,6 +233,11 @@ function bindContextToggles() {
       }
     });
   });
+}
+
+function shouldShowFormateurs(formatDisplay) {
+  const value = cleanNotionText(formatDisplay).toLowerCase();
+  return !value.includes("classe virtuelle") && !value.includes("présentiel") && !value.includes("presentiel");
 }
 
 function renderCards(data) {
@@ -320,6 +328,7 @@ function renderCards(data) {
     const typologieDisplay = formatLabel(typologieRaw) || typologieRaw;
     const typeEppDisplay = formatLabel(typeEppRaw) || typeEppRaw;
     const formatClass = getFormatClass(formatDisplay);
+    const showFormateurs = shouldShowFormateurs(formatDisplay);
 
     return `
       <article class="card ${formatClass}">
@@ -347,7 +356,7 @@ function renderCards(data) {
           ${createInfoBlock("Type d’EPP", typeEppDisplay || "-")}
           ${createInfoBlock("Durée totale", dureeTotale || "-")}
           ${createInfoBlock("ODPC", odpc || "-")}
-          ${createInfoBlock("Formateur(s)", formateurs || "-")}
+          ${showFormateurs ? createInfoBlock("Formateur(s)", formateurs || "-") : ""}
           ${createInfoBlock("Prise en charge", priseEnCharge || "-")}
           ${createInfoBlock("Indemnités PS", indemnites || "-")}
         </div>
