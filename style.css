@@ -140,6 +140,13 @@ h1 {
   word-break: break-word;
 }
 
+.context-block {
+  margin-top: 14px;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
 .empty-state {
   background: #ffffff;
   border: 1px dashed #d1d5db;
