@@ -215,27 +215,27 @@ h1 {
   inset: 0 auto 0 0;
   width: 6px;
   border-radius: 26px 0 0 26px;
-  background: #d8cfbc;
+  background: linear-gradient(180deg, #99874e, #c1b07a);
 }
 
 .card.format-elearning::before {
-  background: linear-gradient(180deg, #99874e, #c0ad6f);
+  background: linear-gradient(180deg, #99874e, #c1b07a);
 }
 
 .card.format-classe-virtuelle::before {
-  background: linear-gradient(180deg, #7f8f7d, #aab8a4);
+  background: linear-gradient(180deg, #8f8a78, #b7b19d);
 }
 
 .card.format-presentiel::before {
-  background: linear-gradient(180deg, #c68a55, #ddb084);
+  background: linear-gradient(180deg, #a78c74, #c6ae99);
 }
 
 .card.format-mixte::before {
-  background: linear-gradient(180deg, #9d7b57, #c8a987);
+  background: linear-gradient(180deg, #8d7f6c, #b8aa99);
 }
 
 .card.format-default::before {
-  background: linear-gradient(180deg, #8d8678, #b6afa3);
+  background: linear-gradient(180deg, #9a8f7b, #c0b5a4);
 }
 
 .card-header {
@@ -292,27 +292,27 @@ h1 {
 }
 
 .badge-format-elearning {
-  background: #f4efdf;
-  color: #7f703f;
-  border-color: #e6dcc0;
+  background: #f6f1e4;
+  color: #7d7046;
+  border-color: #e7ddc0;
 }
 
 .badge-format-classe-virtuelle {
-  background: #eef4ef;
-  color: #657661;
-  border-color: #d7e2d7;
+  background: #f3f2ee;
+  color: #6f6a60;
+  border-color: #e3dfd6;
 }
 
 .badge-format-presentiel {
-  background: #fbf1e8;
-  color: #b37134;
-  border-color: #ecd0b4;
+  background: #f7f2ed;
+  color: #7d6650;
+  border-color: #e7d9cb;
 }
 
 .badge-format-mixte {
-  background: #f7f0e8;
-  color: #8a6a49;
-  border-color: #e6d4c0;
+  background: #f4f1ec;
+  color: #726657;
+  border-color: #e2d8cc;
 }
 
 .card-grid {
@@ -389,8 +389,8 @@ h1 {
   height: 18px;
   border: none;
   border-radius: 999px;
-  background: #efe7d6;
-  color: #7b6a43;
+  background: #e9dfc5;
+  color: #715f31;
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -404,8 +404,8 @@ h1 {
 }
 
 .info-help-button:hover {
-  background: #e4d8bf;
-  color: #5d4f2c;
+  background: #ddcfaa;
+  color: #5b4c26;
   transform: scale(1.04);
 }
 
@@ -461,7 +461,14 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent-dark);
 }
 
 .articulation-timeline {
@@ -507,15 +514,15 @@ h1 {
 }
 
 .step-badge-format {
-  background: #eef4ef;
-  color: #657661;
-  border-color: #d7e2d7;
+  background: #f4f2ee;
+  color: #6c655a;
+  border-color: #e3ddd3;
 }
 
 .step-badge-duree {
-  background: #fbf1e8;
-  color: #b37134;
-  border-color: #ecd0b4;
+  background: #f8f4ec;
+  color: #8a6c45;
+  border-color: #e9dcc6;
 }
 
 .articulation-arrow {
