@@ -74,7 +74,7 @@ function renderCards(data) {
       "Numero"
     ]));
 
-    const publicConcerne = cleanNotionText(getField(item, [
+    const publicConcerne = splitMultiValue(getField(item, [
       "Public concerné",
       "Public Concerné"
     ]));
@@ -126,15 +126,21 @@ function renderCards(data) {
 
         <div class="card-grid">
           ${createInfoBlock("Numéro de dépôt", numeroDepot)}
-          ${createInfoBlock("Public concerné", publicConcerne)}
+          ${createInfoBlock("Public concerné", publicConcerne.length ? publicConcerne.join(", ") : "-")}
           ${createInfoBlock("Format", format)}
           ${createInfoBlock("Typologie", typologie)}
           ${createInfoBlock("Type d’EPP", typeEpp)}
           ${createInfoBlock("Durée totale", dureeTotale)}
           ${createInfoBlock("Prise en charge", priseEnCharge)}
           ${createInfoBlock("Indemnités PS", indemnites)}
-          ${createInfoBlock("Contexte", contexte)}
         </div>
+
+        ${contexte ? `
+          <div class="context-block">
+            <span class="info-label">Contexte</span>
+            <div class="info-value">${contexte}</div>
+          </div>
+        ` : ""}
       </article>
     `;
   }).join("");
@@ -163,7 +169,7 @@ function applyFilters() {
       "Numero"
     ])).toLowerCase();
 
-    const publicConcerne = cleanNotionText(getField(item, [
+    const publicConcerne = splitMultiValue(getField(item, [
       "Public concerné",
       "Public Concerné"
     ]));
@@ -185,11 +191,11 @@ function applyFilters() {
       !searchValue ||
       title.includes(searchValue) ||
       numeroDepot.includes(searchValue) ||
-      publicConcerne.toLowerCase().includes(searchValue) ||
+      publicConcerne.join(", ").toLowerCase().includes(searchValue) ||
       contexte.includes(searchValue);
 
     const matchesFormat = !formatValue || format === formatValue;
-    const matchesPublic = !publicValue || publicConcerne === publicValue;
+    const matchesPublic = !publicValue || publicConcerne.includes(publicValue);
     const matchesTypologie = !typologieValue || typologie === typologieValue;
 
     return matchesSearch && matchesFormat && matchesPublic && matchesTypologie;
@@ -208,7 +214,9 @@ function initFilters(data) {
   )].sort((a, b) => a.localeCompare(b, "fr"));
 
   const publics = [...new Set(
-    data.map(item => cleanNotionText(getField(item, ["Public concerné", "Public Concerné"]))).filter(Boolean)
+    data.flatMap(item =>
+      splitMultiValue(getField(item, ["Public concerné", "Public Concerné"]))
+    ).filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, "fr"));
 
   const typologies = [...new Set(
