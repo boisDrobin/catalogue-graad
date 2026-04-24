@@ -55,6 +55,8 @@ function formatLabel(value) {
     "VC": "Vignette clinique",
     "NA (FC)": "Aucune",
     "NA(FC)": "Aucune",
+    "NON PRÉSENTIEL": "E-learning",
+    "NON PRESENTIEL": "E-learning",
     "ELEARNING": "E-learning",
     "E-LEARNING": "E-learning",
     "PRÉSENTIEL": "Présentiel",
@@ -80,7 +82,9 @@ function getFormatClass(formatValue) {
   if (value.includes("mixte")) return "format-mixte";
   if (value.includes("classe virtuelle")) return "format-classe-virtuelle";
   if (value.includes("présentiel") || value.includes("presentiel")) return "format-presentiel";
-  if (value.includes("e-learning") || value.includes("elearning")) return "format-elearning";
+  if (value.includes("e-learning") || value.includes("elearning") || value.includes("non présentiel") || value.includes("non presentiel")) {
+    return "format-elearning";
+  }
 
   return "format-default";
 }
@@ -125,7 +129,6 @@ function getTypeEppHelpContent() {
     <div class="info-popover-title">Type d’EPP</div>
     <p><strong>Audit clinique</strong> : démarche qui compare les pratiques à des références pour identifier des pistes d’amélioration.</p>
     <p><strong>Vignette clinique</strong> : cas pratique permettant d’analyser le raisonnement et les choix professionnels.</p>
-    <p><strong>Aucune</strong> : la formation ne comporte pas de modalité EPP spécifique dans cette rubrique.</p>
   `;
 }
 
@@ -214,61 +217,6 @@ function getUnitData(item, unitNumber) {
   };
 }
 
-function pluralize(count, singular, plural) {
-  return count > 1 ? plural : singular;
-}
-
-function countMatching(units, predicate) {
-  return units.filter(predicate).length;
-}
-
-function summarizeArticulation(units) {
-  if (!units.length) return "";
-
-  const unitCount = units.length;
-
-  const countFC = countMatching(units, unit => unit.typologie === "Formation continue");
-  const countAudit = countMatching(units, unit => unit.typologie === "Audit clinique");
-  const countVignette = countMatching(units, unit => unit.typologie === "Vignette clinique");
-  const countEpp = countMatching(units, unit => unit.typologie === "Évaluation des pratiques professionnelles");
-  const countElearning = countMatching(units, unit => unit.format === "E-learning");
-  const countCV = countMatching(units, unit => unit.format === "Classe virtuelle");
-  const countPresentiel = countMatching(units, unit => unit.format === "Présentiel");
-
-  if (countAudit || countVignette || countEpp) {
-    const parts = [];
-
-    if (countFC) {
-      parts.push(`${countFC} ${pluralize(countFC, "temps", "temps")} de formation continue`);
-    }
-    if (countAudit) {
-      parts.push(`${countAudit} ${pluralize(countAudit, "temps", "temps")} d’audit clinique`);
-    }
-    if (countVignette) {
-      parts.push(`${countVignette} ${pluralize(countVignette, "temps", "temps")} de vignette clinique`);
-    }
-    if (countEpp) {
-      parts.push(`${countEpp} ${pluralize(countEpp, "temps", "temps")} d’évaluation des pratiques professionnelles`);
-    }
-
-    return `Cette formation s’articule en ${unitCount} ${pluralize(unitCount, "étape", "étapes")} : ${parts.join(" et ")}.`;
-  }
-
-  const formatOrder = units.map(unit => unit.format).filter(Boolean);
-  if (formatOrder.length >= 2) {
-    const readableParts = formatOrder.map((format, index) => {
-      const prefix = index === 0 ? "1 partie en" : "puis 1 partie en";
-      const article = /^[aeiouéèêëàâîïôöùûü]/i.test(format) ? "en" : "en";
-      if (prefix === "1 partie en") return `1 partie ${article} ${format.toLowerCase()}`;
-      return `puis 1 partie ${article} ${format.toLowerCase()}`;
-    });
-
-    return `Cette formation s’articule en ${unitCount} ${pluralize(unitCount, "étape", "étapes")} : ${readableParts.join(" ")}.`;
-  }
-
-  return `Cette formation s’articule en ${unitCount} ${pluralize(unitCount, "étape", "étapes")}.`;
-}
-
 function createStepBadge(value, className) {
   if (!value) return "";
   return `<span class="step-badge ${className}">${escapeHtml(value)}</span>`;
@@ -288,8 +236,6 @@ function createArticulationBlock(item) {
 
   const units = [u1, u2, u3].filter(unit => unit && !isZeroOrEmptyDuration(unit.dureeRaw));
   if (!units.length) return "";
-
-  const summary = summarizeArticulation(units);
 
   const stepsHtml = units.map((unit, index) => {
     const stepHtml = `
@@ -316,7 +262,6 @@ function createArticulationBlock(item) {
         <div class="section-title-row">
           <span class="section-title">Articulation de la formation</span>
         </div>
-        <p class="articulation-summary">${escapeHtml(summary)}</p>
         <div class="articulation-timeline">
           ${stepsHtml}
         </div>
@@ -359,11 +304,13 @@ function closeAllPopovers() {
   });
 }
 
+let popoverEventsBound = false;
+
 function bindInfoPopovers() {
   const buttons = document.querySelectorAll(".info-help-button");
 
   buttons.forEach(button => {
-    button.addEventListener("click", (event) => {
+    button.onclick = (event) => {
       event.stopPropagation();
 
       const popover = button.parentElement.querySelector(".info-popover");
@@ -376,10 +323,75 @@ function bindInfoPopovers() {
         popover.hidden = false;
         button.setAttribute("aria-expanded", "true");
       }
-    });
+    };
   });
 
-  document.addEventListener("click", closeAllPopovers);
+  if (!popoverEventsBound) {
+    document.addEventListener("click", closeAllPopovers);
+    popoverEventsBound = true;
+  }
+}
+
+function formatDateFr(date) {
+  return new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  }).format(date);
+}
+
+function tryParseDate(value) {
+  const raw = cleanNotionText(value);
+  if (!raw) return null;
+
+  const direct = new Date(raw);
+  if (!Number.isNaN(direct.getTime())) return direct;
+
+  const frMatch = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (frMatch) {
+    const [, d, m, y] = frMatch;
+    const parsed = new Date(`${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}T00:00:00`);
+    if (!Number.isNaN(parsed.getTime())) return parsed;
+  }
+
+  return null;
+}
+
+function findExportDateInData(rows) {
+  if (!rows.length) return null;
+
+  const candidateKeys = [
+    "Date d'export",
+    "Date export",
+    "Export du",
+    "Date de l'export",
+    "Dernière mise à jour",
+    "Derniere mise a jour",
+    "Mise à jour",
+    "Mise a jour"
+  ];
+
+  for (const key of candidateKeys) {
+    const value = getField(rows[0], [key]);
+    const parsed = tryParseDate(value);
+    if (parsed) return parsed;
+  }
+
+  return null;
+}
+
+function setSubtitle(exportDate, lastModifiedDate) {
+  const subtitle = document.getElementById("subtitle-text");
+  if (!subtitle) return;
+
+  const dateToUse = exportDate || lastModifiedDate;
+
+  if (dateToUse) {
+    subtitle.textContent = `Catalogue mis à jour à partir d’un export Notion - Dernière mise à jour le ${formatDateFr(dateToUse)}`;
+    return;
+  }
+
+  subtitle.textContent = "Catalogue mis à jour à partir d’un export Notion";
 }
 
 function renderCards(data) {
@@ -601,12 +613,29 @@ function initFilters(data) {
   typologieSelect.addEventListener("change", applyFilters);
 }
 
-Papa.parse("./data/catalogue.csv", {
-  download: true,
-  header: true,
-  skipEmptyLines: true,
-  complete: function(results) {
-    const rawData = results.data || [];
+async function loadCatalogue() {
+  try {
+    const response = await fetch("./data/catalogue.csv");
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP ${response.status}`);
+    }
+
+    const csvText = await response.text();
+
+    const lastModifiedHeader = response.headers.get("last-modified");
+    const lastModifiedDate = lastModifiedHeader ? new Date(lastModifiedHeader) : null;
+    const usableLastModifiedDate =
+      lastModifiedDate && !Number.isNaN(lastModifiedDate.getTime()) ? lastModifiedDate : null;
+
+    const parsed = Papa.parse(csvText, {
+      header: true,
+      skipEmptyLines: true
+    });
+
+    const rawData = parsed.data || [];
+    const exportDate = findExportDateInData(rawData);
+
+    setSubtitle(exportDate, usableLastModifiedDate);
 
     catalogue = rawData.filter(item => {
       const commercialisation = cleanNotionText(getField(item, ["Commercialisation"]));
@@ -615,8 +644,7 @@ Papa.parse("./data/catalogue.csv", {
 
     initFilters(catalogue);
     renderCards(catalogue);
-  },
-  error: function(error) {
+  } catch (error) {
     console.error(error);
     document.getElementById("results").innerHTML = `
       <div class="empty-state">
@@ -624,5 +652,8 @@ Papa.parse("./data/catalogue.csv", {
       </div>
     `;
     document.getElementById("results-count").textContent = "Erreur de chargement";
+    setSubtitle(null, null);
   }
-});
+}
+
+loadCatalogue();
