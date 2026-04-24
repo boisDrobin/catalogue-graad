@@ -120,6 +120,30 @@ function createContextBlock(contexte, index) {
   `;
 }
 
+function bindContextToggles() {
+  const buttons = document.querySelectorAll(".context-toggle");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const targetId = button.getAttribute("data-target");
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      const isCollapsed = target.classList.contains("is-collapsed");
+
+      if (isCollapsed) {
+        target.classList.remove("is-collapsed");
+        button.textContent = "Voir moins";
+        button.setAttribute("aria-expanded", "true");
+      } else {
+        target.classList.add("is-collapsed");
+        button.textContent = "Voir plus";
+        button.setAttribute("aria-expanded", "false");
+      }
+    });
+  });
+}
+
 function renderCards(data) {
   const results = document.getElementById("results");
   const resultsCount = document.getElementById("results-count");
@@ -137,6 +161,7 @@ function renderCards(data) {
 
   results.innerHTML = data.map((item, index) => {
     const title = cleanNotionText(getField(item, [
+      "Thématiques 2628",
       "Intitulé de l'action",
       "Intitulé",
       "Nom",
@@ -189,6 +214,15 @@ function renderCards(data) {
       "Indemnites PS"
     ]));
 
+    const formateurs = cleanNotionText(getField(item, [
+      "Formateur(s)",
+      "Formateurs"
+    ]));
+
+    const odpc = cleanNotionText(getField(item, [
+      "ODPC"
+    ]));
+
     const commercialisation = cleanNotionText(getField(item, [
       "Commercialisation"
     ]));
@@ -223,6 +257,8 @@ function renderCards(data) {
           ${createInfoBlock("Typologie", typologieDisplay || "-")}
           ${createInfoBlock("Type d’EPP", typeEppDisplay || "-")}
           ${createInfoBlock("Durée totale", dureeTotale || "-")}
+          ${createInfoBlock("ODPC", odpc || "-")}
+          ${createInfoBlock("Formateur(s)", formateurs || "-")}
           ${createInfoBlock("Prise en charge", priseEnCharge || "-")}
           ${createInfoBlock("Indemnités PS", indemnites || "-")}
         </div>
@@ -235,30 +271,6 @@ function renderCards(data) {
   bindContextToggles();
 }
 
-function bindContextToggles() {
-  const buttons = document.querySelectorAll(".context-toggle");
-
-  buttons.forEach(button => {
-    button.addEventListener("click", () => {
-      const targetId = button.getAttribute("data-target");
-      const target = document.getElementById(targetId);
-      if (!target) return;
-
-      const isCollapsed = target.classList.contains("is-collapsed");
-
-      if (isCollapsed) {
-        target.classList.remove("is-collapsed");
-        button.textContent = "Voir moins";
-        button.setAttribute("aria-expanded", "true");
-      } else {
-        target.classList.add("is-collapsed");
-        button.textContent = "Voir plus";
-        button.setAttribute("aria-expanded", "false");
-      }
-    });
-  });
-}
-
 function applyFilters() {
   const searchValue = normalize(document.getElementById("search").value).toLowerCase();
   const formatValue = normalize(document.getElementById("filter-format").value);
@@ -267,6 +279,7 @@ function applyFilters() {
 
   const filtered = catalogue.filter(item => {
     const title = cleanNotionText(getField(item, [
+      "Thématiques 2628",
       "Intitulé de l'action",
       "Intitulé",
       "Nom",
