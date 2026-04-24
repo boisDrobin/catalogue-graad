@@ -16,6 +16,9 @@
   --accent: #6f5ef9;
   --accent-soft: #f1eeff;
 
+  --icon-bg: #f6f2ec;
+  --icon-color: #7b6f63;
+
   --radius-xl: 24px;
   --radius-lg: 18px;
   --radius-md: 14px;
@@ -59,6 +62,13 @@ body {
   max-width: 820px;
   margin: 0 auto;
   text-align: center;
+}
+
+.header-logo {
+  display: block;
+  width: min(240px, 70%);
+  height: auto;
+  margin: 0 auto 20px;
 }
 
 .eyebrow {
@@ -307,6 +317,36 @@ h1 {
   padding: 15px 16px;
 }
 
+.info-block-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-icon {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 12px;
+  background: var(--icon-bg);
+  border: 1px solid #ece4da;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--icon-color);
+}
+
+.info-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.info-content {
+  flex: 1;
+  min-width: 0;
+}
+
 .info-label-row {
   display: flex;
   align-items: center;
@@ -335,10 +375,10 @@ h1 {
 .info-help-button {
   width: 18px;
   height: 18px;
-  border: 1px solid #d8d1c8;
+  border: none;
   border-radius: 999px;
-  background: #ffffff;
-  color: #7b8490;
+  background: #efe8de;
+  color: #7b6f63;
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -348,11 +388,13 @@ h1 {
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .info-help-button:hover {
-  background: #faf8f5;
-  color: #4b5563;
+  background: #e4d9cd;
+  color: #5f5449;
+  transform: scale(1.04);
 }
 
 .info-popover {
@@ -550,6 +592,10 @@ h1 {
   .header-content {
     padding: 28px 18px 24px;
     border-radius: 22px;
+  }
+
+  .header-logo {
+    width: min(200px, 75%);
   }
 
   h1 {
