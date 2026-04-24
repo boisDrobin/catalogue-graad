@@ -93,7 +93,7 @@ h1 {
   font-size: 14px;
   color: var(--text);
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .filter-group input:focus,
@@ -248,7 +248,8 @@ h1 {
   gap: 14px 18px;
 }
 
-.info-block {
+.info-block,
+.articulation-item {
   background: linear-gradient(180deg, #fbfdff 0%, #f8fafc 100%);
   border: 1px solid #edf2f7;
   border-radius: var(--radius-lg);
@@ -272,7 +273,7 @@ h1 {
   word-break: break-word;
 }
 
-.context-wrapper {
+.section-block {
   margin-top: 16px;
   background: linear-gradient(180deg, #fbfdff 0%, #f8fafc 100%);
   border: 1px solid #edf2f7;
@@ -280,8 +281,42 @@ h1 {
   overflow: hidden;
 }
 
-.context-inner {
-  padding: 15px 16px 10px;
+.section-inner {
+  padding: 15px 16px 16px;
+}
+
+.section-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.articulation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.articulation-item-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.articulation-lines {
+  display: grid;
+  gap: 6px;
+}
+
+.articulation-line {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #374151;
 }
 
 .context-text {
