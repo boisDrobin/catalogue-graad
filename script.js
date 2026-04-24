@@ -227,12 +227,16 @@ function getInfoIcon(label) {
 
 function createInfoBlock(label, value, options = {}) {
   const helpType = options.helpType || "";
+  const isHtmlValue = options.isHtmlValue || false;
+
   const popoverContent =
     helpType === "type-epp"
       ? getTypeEppHelpContent()
       : helpType === "typologie"
         ? getTypologieHelpContent()
         : "";
+
+  const finalValue = isHtmlValue ? (value || "-") : escapeHtml(value || "-");
 
   return `
     <div class="info-block">
@@ -256,11 +260,41 @@ function createInfoBlock(label, value, options = {}) {
               </div>
             ` : ""}
           </div>
-          <div class="info-value">${escapeHtml(value || "-")}</div>
+          <div class="info-value">${finalValue}</div>
         </div>
       </div>
     </div>
   `;
+}
+
+function createPublicConcerneBlock(publics, index) {
+  if (!publics || !publics.length) {
+    return createInfoBlock("Public concerné", "-");
+  }
+
+  if (publics.length === 1) {
+    return createInfoBlock("Public concerné", publics[0]);
+  }
+
+  const first = escapeHtml(publics[0]);
+  const rest = publics.slice(1).map(escapeHtml).join(", ");
+  const targetId = `public-extra-${index}`;
+
+  const htmlValue = `
+    <span class="public-value-inline">${first}</span><span id="${targetId}" class="public-extra" hidden>, ${rest}</span>
+    <button
+      class="content-toggle"
+      type="button"
+      aria-expanded="false"
+      data-target="${targetId}"
+      data-more-label="Voir plus"
+      data-less-label="Voir moins"
+    >
+      Voir plus
+    </button>
+  `;
+
+  return createInfoBlock("Public concerné", htmlValue, { isHtmlValue: true });
 }
 
 function createContextBlock(contexte, index) {
@@ -279,10 +313,12 @@ function createContextBlock(contexte, index) {
       ${shouldCollapse ? `
         <div class="context-actions">
           <button
-            class="context-toggle"
+            class="content-toggle"
             type="button"
             aria-expanded="false"
             data-target="${textId}"
+            data-more-label="Voir plus"
+            data-less-label="Voir moins"
           >
             Voir plus
           </button>
@@ -362,27 +398,36 @@ function createArticulationBlock(item) {
   `;
 }
 
-function bindContextToggles() {
-  const buttons = document.querySelectorAll(".context-toggle");
+function bindContentToggles() {
+  const buttons = document.querySelectorAll(".content-toggle");
 
   buttons.forEach(button => {
-    button.addEventListener("click", () => {
+    button.onclick = () => {
       const targetId = button.getAttribute("data-target");
       const target = document.getElementById(targetId);
       if (!target) return;
 
-      const isCollapsed = target.classList.contains("is-collapsed");
+      const moreLabel = button.getAttribute("data-more-label") || "Voir plus";
+      const lessLabel = button.getAttribute("data-less-label") || "Voir moins";
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
 
-      if (isCollapsed) {
-        target.classList.remove("is-collapsed");
-        button.textContent = "Voir moins";
-        button.setAttribute("aria-expanded", "true");
+      if (target.classList.contains("context-text")) {
+        if (isExpanded) {
+          target.classList.add("is-collapsed");
+          button.textContent = moreLabel;
+          button.setAttribute("aria-expanded", "false");
+        } else {
+          target.classList.remove("is-collapsed");
+          button.textContent = lessLabel;
+          button.setAttribute("aria-expanded", "true");
+        }
       } else {
-        target.classList.add("is-collapsed");
-        button.textContent = "Voir plus";
-        button.setAttribute("aria-expanded", "false");
+        const isHidden = target.hidden;
+        target.hidden = !isHidden;
+        button.textContent = isHidden ? lessLabel : moreLabel;
+        button.setAttribute("aria-expanded", isHidden ? "true" : "false");
       }
-    });
+    };
   });
 }
 
@@ -596,7 +641,7 @@ function renderCards(data) {
 
         <div class="card-grid">
           ${createInfoBlock("Numéro de dépôt", numeroDepot)}
-          ${createInfoBlock("Public concerné", publicConcerne.length ? publicConcerne.join(", ") : "-")}
+          ${createPublicConcerneBlock(publicConcerne, index)}
           ${createInfoBlock("Format", formatDisplay || "-")}
           ${createInfoBlock("Typologie", typologieDisplay || "-", { helpType: "typologie" })}
           ${createInfoBlock("Type d’EPP", typeEppDisplay || "-", { helpType: "type-epp" })}
@@ -613,7 +658,7 @@ function renderCards(data) {
     `;
   }).join("");
 
-  bindContextToggles();
+  bindContentToggles();
   bindInfoPopovers();
 }
 
