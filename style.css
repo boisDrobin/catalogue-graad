@@ -584,6 +584,41 @@ h1 {
   padding: 0 18px 16px;
 }
 
+.card-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.memo-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #99874e;
+  color: #ffffff;
+  border: 1px solid #99874e;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 8px 18px rgba(153, 135, 78, 0.18);
+}
+
+.memo-button:hover {
+  transform: translateY(-1px);
+  background: #8a7944;
+  border-color: #8a7944;
+  box-shadow: 0 12px 22px rgba(153, 135, 78, 0.22);
+}
+
+.memo-button svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
 .empty-state {
   background: rgba(255, 255, 255, 0.96);
   border: 1px dashed #d9cfbf;
@@ -665,5 +700,14 @@ h1 {
 
   .info-popover {
     width: min(300px, calc(100vw - 56px));
+  }
+
+  .card-actions {
+    justify-content: stretch;
+  }
+
+  .memo-button {
+    width: 100%;
+    justify-content: center;
   }
 }
