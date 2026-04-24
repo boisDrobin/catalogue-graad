@@ -328,6 +328,31 @@ function createContextBlock(contexte, index) {
   `;
 }
 
+function createMemoButton(url) {
+  if (!url) return "";
+
+  const safeUrl = escapeHtml(url);
+
+  return `
+    <div class="card-actions">
+      <a
+        class="memo-button"
+        href="${safeUrl}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"></path>
+          <path d="M14 3v6h6"></path>
+          <path d="M9 15h6"></path>
+          <path d="M9 11h3"></path>
+        </svg>
+        Voir le mémo PDF
+      </a>
+    </div>
+  `;
+}
+
 function getUnitData(item, unitNumber) {
   const typologie = formatLabel(getField(item, [`U${unitNumber} - Typologie`]));
   const format = formatLabel(getField(item, [`U${unitNumber} - Format`]));
@@ -615,6 +640,13 @@ function renderCards(data) {
       "Commercialisation"
     ]));
 
+    const memoPdf = cleanNotionText(getField(item, [
+      "Fiche mémo pdf",
+      "Fiche mémo PDF",
+      "Fiche memo pdf",
+      "Fiche memo PDF"
+    ]));
+
     const formatDisplay = formatLabel(formatRaw) || formatRaw;
     const typologieDisplay = formatLabel(typologieRaw) || typologieRaw;
     const typeEppDisplay = formatLabel(typeEppRaw) || typeEppRaw;
@@ -654,6 +686,7 @@ function renderCards(data) {
 
         ${createArticulationBlock(item)}
         ${createContextBlock(contexte, index)}
+        ${createMemoButton(memoPdf)}
       </article>
     `;
   }).join("");
