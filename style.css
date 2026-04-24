@@ -286,33 +286,33 @@ h1 {
 }
 
 .badge-format {
-  background: #f8f5ef;
-  color: #665f54;
-  border-color: #e7dece;
+  background: #6f6758;
+  color: #ffffff;
+  border-color: #6f6758;
 }
 
 .badge-format-elearning {
-  background: #f6f1e4;
-  color: #7d7046;
-  border-color: #e7ddc0;
+  background: #99874e;
+  color: #ffffff;
+  border-color: #99874e;
 }
 
 .badge-format-classe-virtuelle {
-  background: #f3f2ee;
-  color: #6f6a60;
-  border-color: #e3dfd6;
+  background: #667a67;
+  color: #ffffff;
+  border-color: #667a67;
 }
 
 .badge-format-presentiel {
-  background: #f7f2ed;
-  color: #7d6650;
-  border-color: #e7d9cb;
+  background: #b87945;
+  color: #ffffff;
+  border-color: #b87945;
 }
 
 .badge-format-mixte {
-  background: #f4f1ec;
-  color: #726657;
-  border-color: #e2d8cc;
+  background: #7f6a57;
+  color: #ffffff;
+  border-color: #7f6a57;
 }
 
 .card-grid {
@@ -461,13 +461,13 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .section-title {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   color: var(--accent-dark);
 }
 
@@ -514,9 +514,9 @@ h1 {
 }
 
 .step-badge-format {
-  background: #f4f2ee;
-  color: #6c655a;
-  border-color: #e3ddd3;
+  background: #6f6758;
+  color: #ffffff;
+  border-color: #6f6758;
 }
 
 .step-badge-duree {
