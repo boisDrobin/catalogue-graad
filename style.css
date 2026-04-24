@@ -444,6 +444,14 @@ h1 {
   margin-bottom: 0;
 }
 
+.public-value-inline {
+  display: inline;
+}
+
+.public-extra[hidden] {
+  display: none;
+}
+
 .section-block {
   margin-top: 20px;
   background: linear-gradient(180deg, #fffefd 0%, #fbfaf7 100%);
@@ -465,10 +473,15 @@ h1 {
 }
 
 .section-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   color: var(--accent-dark);
+  margin-bottom: 12px;
+}
+
+.section-title-row .section-title {
+  margin-bottom: 0;
 }
 
 .articulation-timeline {
@@ -551,11 +564,7 @@ h1 {
   overflow: hidden;
 }
 
-.context-actions {
-  padding: 0 18px 16px;
-}
-
-.context-toggle {
+.content-toggle {
   appearance: none;
   border: 0;
   background: transparent;
@@ -564,10 +573,15 @@ h1 {
   font-weight: 600;
   cursor: pointer;
   padding: 0;
+  margin-top: 8px;
 }
 
-.context-toggle:hover {
+.content-toggle:hover {
   text-decoration: underline;
+}
+
+.context-actions {
+  padding: 0 18px 16px;
 }
 
 .empty-state {
