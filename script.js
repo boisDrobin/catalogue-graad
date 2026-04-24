@@ -91,6 +91,22 @@ function getFormatClass(formatValue) {
   return "format-default";
 }
 
+function formatHours(value) {
+  const raw = cleanNotionText(value);
+  if (!raw) return "";
+
+  const normalized = raw.replace(",", ".").trim();
+  const number = Number(normalized);
+
+  if (!Number.isNaN(number)) {
+    const label = number > 1 ? "heures" : "heure";
+    const display = Number.isInteger(number) ? String(number) : String(number).replace(".", ",");
+    return `${display} ${label}`;
+  }
+
+  return raw.toLowerCase().includes("heure") ? raw : `${raw} heures`;
+}
+
 function createContextBlock(contexte, index) {
   if (!contexte) return "";
 
@@ -123,22 +139,47 @@ function createContextBlock(contexte, index) {
 function getUnitData(item, unitNumber) {
   const typologie = formatLabel(getField(item, [`U${unitNumber} - Typologie`]));
   const format = formatLabel(getField(item, [`U${unitNumber} - Format`]));
-  const duree = cleanNotionText(getField(item, [`U${unitNumber} - Nb d'heure(s) total`]));
+  const dureeRaw = cleanNotionText(getField(item, [`U${unitNumber} - Nb d'heure(s) total`]));
+  const duree = formatHours(dureeRaw);
 
-  if (!typologie && !format && !duree) return null;
+  if (!typologie && !format && !dureeRaw) return null;
 
   return {
     unit: `U${unitNumber}`,
     typologie,
     format,
-    duree
+    duree,
+    dureeRaw
   };
 }
 
+function isZeroOrEmptyDuration(value) {
+  const raw = cleanNotionText(value);
+  if (!raw) return true;
+
+  const normalized = raw.replace(",", ".").trim();
+  const number = Number(normalized);
+
+  if (!Number.isNaN(number)) {
+    return number === 0;
+  }
+
+  return raw === "0";
+}
+
 function createArticulationBlock(item) {
-  const units = [1, 2, 3]
-    .map(unitNumber => getUnitData(item, unitNumber))
-    .filter(Boolean);
+  const u1 = getUnitData(item, 1);
+  const u2 = getUnitData(item, 2);
+  const u3 = getUnitData(item, 3);
+
+  const hasU2 = u2 && !isZeroOrEmptyDuration(u2.dureeRaw);
+  const hasU3 = u3 && !isZeroOrEmptyDuration(u3.dureeRaw);
+
+  if (!hasU2 && !hasU3) {
+    return "";
+  }
+
+  const units = [u1, u2, u3].filter(unit => unit && !isZeroOrEmptyDuration(unit.dureeRaw));
 
   if (!units.length) return "";
 
@@ -247,10 +288,11 @@ function renderCards(data) {
       "Type EPP"
     ]));
 
-    const dureeTotale = cleanNotionText(getField(item, [
+    const dureeTotaleRaw = cleanNotionText(getField(item, [
       "Durée totale",
       "Durée Totale"
     ]));
+    const dureeTotale = formatHours(dureeTotaleRaw);
 
     const priseEnCharge = cleanNotionText(getField(item, [
       "Prise en charge"
