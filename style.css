@@ -359,13 +359,6 @@ h1 {
   margin-bottom: 10px;
 }
 
-.articulation-summary {
-  margin: 0 0 14px;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #334155;
-}
-
 .articulation-timeline {
   display: flex;
   align-items: stretch;
