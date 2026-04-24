@@ -3,15 +3,19 @@
 }
 
 :root {
-  --bg: #f4f7fb;
-  --card: rgba(255, 255, 255, 0.96);
-  --text: #172033;
-  --muted: #667085;
-  --border: #e6ebf2;
-  --border-strong: #d7deea;
-  --soft: #f8fafc;
-  --shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-  --shadow-hover: 0 18px 40px rgba(15, 23, 42, 0.09);
+  --bg: #f7f5f2;
+  --bg-soft: #fcfbf9;
+  --card: rgba(255, 255, 255, 0.92);
+  --text: #1f2933;
+  --muted: #6f7782;
+  --border: #e8e2da;
+  --border-strong: #ddd4ca;
+  --shadow: 0 10px 28px rgba(31, 41, 51, 0.06);
+  --shadow-hover: 0 18px 38px rgba(31, 41, 51, 0.1);
+
+  --accent: #6f5ef9;
+  --accent-soft: #f1eeff;
+
   --radius-xl: 24px;
   --radius-lg: 18px;
   --radius-md: 14px;
@@ -24,10 +28,10 @@ html {
 
 body {
   margin: 0;
-  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-family: "Poppins", Arial, Helvetica, sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(99, 102, 241, 0.05), transparent 28%),
-    linear-gradient(180deg, #fbfcfe 0%, var(--bg) 100%);
+    radial-gradient(circle at top left, rgba(111, 94, 249, 0.06), transparent 26%),
+    linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -45,7 +49,7 @@ body {
 .header-content {
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(230, 235, 242, 0.95);
+  border: 1px solid rgba(232, 226, 218, 0.95);
   border-radius: 28px;
   padding: 42px 28px 36px;
   box-shadow: var(--shadow);
@@ -60,26 +64,27 @@ body {
 .eyebrow {
   margin: 0 0 12px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #4f46e5;
+  color: var(--accent);
 }
 
 h1 {
   margin: 0 0 12px;
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.08;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
-  color: #111827;
+  color: #17202a;
 }
 
 .subtitle {
   margin: 0;
   color: var(--muted);
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.75;
+  font-weight: 400;
 }
 
 .filters {
@@ -88,9 +93,9 @@ h1 {
   gap: 18px;
   margin: 30px 0 22px;
   padding: 18px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.76);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(230, 235, 242, 0.95);
+  border: 1px solid rgba(232, 226, 218, 0.95);
   border-radius: 24px;
   box-shadow: var(--shadow);
 }
@@ -103,8 +108,8 @@ h1 {
 
 .filter-group label {
   font-size: 13px;
-  font-weight: 700;
-  color: #475467;
+  font-weight: 600;
+  color: #5d6670;
   padding-left: 2px;
 }
 
@@ -121,7 +126,7 @@ h1 {
   font-weight: 500;
   color: var(--text);
   outline: none;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 1px 2px rgba(31, 41, 51, 0.03);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -130,19 +135,19 @@ h1 {
 }
 
 .filter-group input::placeholder {
-  color: #98a2b3;
+  color: #a0a7b1;
 }
 
 .filter-group input:hover,
 .filter-group select:hover {
-  border-color: #c8d3e1;
+  border-color: #cfc4b8;
   background: #ffffff;
 }
 
 .filter-group input:focus,
 .filter-group select:focus {
-  border-color: #818cf8;
-  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.12);
+  border-color: rgba(111, 94, 249, 0.55);
+  box-shadow: 0 0 0 4px rgba(111, 94, 249, 0.12);
 }
 
 .topbar {
@@ -156,7 +161,7 @@ h1 {
   margin: 0;
   font-size: 14px;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .cards {
@@ -168,7 +173,7 @@ h1 {
 .card {
   position: relative;
   background: var(--card);
-  border: 1px solid rgba(230, 235, 242, 0.98);
+  border: 1px solid rgba(232, 226, 218, 0.98);
   border-radius: 26px;
   padding: 28px;
   box-shadow: var(--shadow);
@@ -179,7 +184,7 @@ h1 {
 .card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
-  border-color: #dde5f0;
+  border-color: #dacfc4;
 }
 
 .card::before {
@@ -188,27 +193,27 @@ h1 {
   inset: 0 auto 0 0;
   width: 6px;
   border-radius: 26px 0 0 26px;
-  background: #cbd5e1;
+  background: #d5cfc7;
 }
 
 .card.format-elearning::before {
-  background: linear-gradient(180deg, #4f46e5, #818cf8);
+  background: linear-gradient(180deg, #6f5ef9, #9a8eff);
 }
 
 .card.format-classe-virtuelle::before {
-  background: linear-gradient(180deg, #0891b2, #22c55e);
+  background: linear-gradient(180deg, #7fa59b, #a9c7be);
 }
 
 .card.format-presentiel::before {
-  background: linear-gradient(180deg, #ea580c, #f59e0b);
+  background: linear-gradient(180deg, #d9945f, #e7b07f);
 }
 
 .card.format-mixte::before {
-  background: linear-gradient(180deg, #7c3aed, #ec4899);
+  background: linear-gradient(180deg, #b07ad9, #d2a8f0);
 }
 
 .card.format-default::before {
-  background: linear-gradient(180deg, #64748b, #94a3b8);
+  background: linear-gradient(180deg, #8f98a3, #b2bbc4);
 }
 
 .card-header {
@@ -228,10 +233,10 @@ h1 {
 .card-title {
   margin: 0 0 12px;
   font-size: 24px;
-  line-height: 1.28;
-  font-weight: 750;
+  line-height: 1.35;
+  font-weight: 600;
   letter-spacing: -0.02em;
-  color: #0f172a;
+  color: #17202a;
 }
 
 .card-badges {
@@ -247,45 +252,45 @@ h1 {
   padding: 8px 12px;
   border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
   border: 1px solid transparent;
 }
 
 .badge-commercialisation {
-  background: #eef2ff;
-  color: #3730a3;
-  border-color: #c7d2fe;
+  background: #f3f0ff;
+  color: #5c49eb;
+  border-color: #ddd6ff;
 }
 
 .badge-format {
-  background: #f8fafc;
-  color: #334155;
-  border-color: #dbe4ee;
+  background: #f8f6f2;
+  color: #5e6670;
+  border-color: #e5ddd3;
 }
 
 .badge-format-elearning {
-  background: #eef2ff;
-  color: #3730a3;
-  border-color: #c7d2fe;
+  background: #f1eeff;
+  color: #5c49eb;
+  border-color: #ddd6ff;
 }
 
 .badge-format-classe-virtuelle {
-  background: #ecfeff;
-  color: #0f766e;
-  border-color: #a5f3fc;
+  background: #eef7f4;
+  color: #547b71;
+  border-color: #d4e8e1;
 }
 
 .badge-format-presentiel {
-  background: #fff7ed;
-  color: #c2410c;
-  border-color: #fdba74;
+  background: #fff4ea;
+  color: #bd6f34;
+  border-color: #f2d1b3;
 }
 
 .badge-format-mixte {
-  background: #faf5ff;
-  color: #7e22ce;
-  border-color: #e9d5ff;
+  background: #f8f0ff;
+  color: #9460bf;
+  border-color: #ead7fa;
 }
 
 .card-grid {
@@ -296,8 +301,8 @@ h1 {
 
 .info-block,
 .articulation-step {
-  background: linear-gradient(180deg, #fcfdff 0%, #f8fafc 100%);
-  border: 1px solid #edf2f7;
+  background: linear-gradient(180deg, #fffefd 0%, #fbfaf8 100%);
+  border: 1px solid #eee8e1;
   border-radius: 18px;
   padding: 15px 16px;
 }
@@ -314,7 +319,7 @@ h1 {
 .section-title {
   display: block;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
@@ -322,18 +327,18 @@ h1 {
 
 .info-value {
   font-size: 14px;
-  line-height: 1.65;
-  color: #111827;
+  line-height: 1.7;
+  color: #17202a;
   word-break: break-word;
 }
 
 .info-help-button {
   width: 18px;
   height: 18px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #d8d1c8;
   border-radius: 999px;
   background: #ffffff;
-  color: #64748b;
+  color: #7b8490;
   font-size: 11px;
   font-weight: 700;
   line-height: 1;
@@ -346,8 +351,8 @@ h1 {
 }
 
 .info-help-button:hover {
-  background: #f8fafc;
-  color: #334155;
+  background: #faf8f5;
+  color: #4b5563;
 }
 
 .info-popover {
@@ -356,9 +361,9 @@ h1 {
   left: 0;
   width: min(320px, 88vw);
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e7dfd6;
   border-radius: 14px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+  box-shadow: 0 18px 40px rgba(31, 41, 51, 0.12);
   padding: 12px 12px 10px;
   z-index: 30;
 }
@@ -370,15 +375,15 @@ h1 {
 .info-popover-title {
   margin: 0 0 8px;
   font-size: 13px;
-  font-weight: 700;
-  color: #0f172a;
+  font-weight: 600;
+  color: #17202a;
 }
 
 .info-popover p {
   margin: 0 0 8px;
   font-size: 13px;
   line-height: 1.55;
-  color: #334155;
+  color: #42505e;
 }
 
 .info-popover p:last-child {
@@ -387,14 +392,14 @@ h1 {
 
 .section-block {
   margin-top: 20px;
-  background: linear-gradient(180deg, #fcfdff 0%, #f8fafc 100%);
-  border: 1px solid #edf2f7;
+  background: linear-gradient(180deg, #fffefd 0%, #fbfaf8 100%);
+  border: 1px solid #eee8e1;
   border-radius: 20px;
   overflow: hidden;
 }
 
 .section-inner {
-  padding: 18px 18px 18px;
+  padding: 18px;
 }
 
 .section-title-row {
@@ -421,8 +426,8 @@ h1 {
 .articulation-step-title {
   margin: 0 0 12px;
   font-size: 14px;
-  font-weight: 700;
-  color: #0f172a;
+  font-weight: 600;
+  color: #17202a;
 }
 
 .step-badges {
@@ -437,33 +442,33 @@ h1 {
   padding: 7px 11px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   border: 1px solid transparent;
 }
 
 .step-badge-typologie {
-  background: #eef2ff;
-  color: #3730a3;
-  border-color: #c7d2fe;
+  background: #f3f0ff;
+  color: #5c49eb;
+  border-color: #ddd6ff;
 }
 
 .step-badge-format {
-  background: #ecfeff;
-  color: #0f766e;
-  border-color: #a5f3fc;
+  background: #eef7f4;
+  color: #547b71;
+  border-color: #d4e8e1;
 }
 
 .step-badge-duree {
-  background: #fff7ed;
-  color: #c2410c;
-  border-color: #fdba74;
+  background: #fff4ea;
+  color: #bd6f34;
+  border-color: #f2d1b3;
 }
 
 .articulation-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: #b4aba1;
   font-size: 22px;
   font-weight: 700;
   min-width: 24px;
@@ -473,8 +478,8 @@ h1 {
 .context-text {
   margin: 0;
   font-size: 14px;
-  line-height: 1.75;
-  color: #1f2937;
+  line-height: 1.8;
+  color: #243140;
   white-space: pre-line;
 }
 
@@ -493,9 +498,9 @@ h1 {
   appearance: none;
   border: 0;
   background: transparent;
-  color: #4f46e5;
+  color: var(--accent);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   padding: 0;
 }
@@ -506,7 +511,7 @@ h1 {
 
 .empty-state {
   background: rgba(255, 255, 255, 0.96);
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed #d8d1c8;
   border-radius: 24px;
   padding: 34px;
   text-align: center;
