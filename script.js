@@ -99,9 +99,9 @@ function createContextBlock(contexte, index) {
   const textId = `context-text-${index}`;
 
   return `
-    <div class="context-wrapper">
-      <div class="context-inner">
-        <span class="info-label">Contexte</span>
+    <div class="section-block">
+      <div class="section-inner">
+        <span class="section-title">Contexte</span>
         <p id="${textId}" class="context-text ${shouldCollapse ? "is-collapsed" : ""}">${safeText}</p>
       </div>
       ${shouldCollapse ? `
@@ -116,6 +116,53 @@ function createContextBlock(contexte, index) {
           </button>
         </div>
       ` : ""}
+    </div>
+  `;
+}
+
+function getUnitData(item, unitNumber) {
+  const typologie = formatLabel(getField(item, [`U${unitNumber} - Typologie`]));
+  const format = formatLabel(getField(item, [`U${unitNumber} - Format`]));
+  const duree = cleanNotionText(getField(item, [`U${unitNumber} - Nb d'heure(s) total`]));
+
+  if (!typologie && !format && !duree) return null;
+
+  return {
+    unit: `U${unitNumber}`,
+    typologie,
+    format,
+    duree
+  };
+}
+
+function createArticulationBlock(item) {
+  const units = [1, 2, 3]
+    .map(unitNumber => getUnitData(item, unitNumber))
+    .filter(Boolean);
+
+  if (!units.length) return "";
+
+  const unitsHtml = units.map(unit => {
+    return `
+      <div class="articulation-item">
+        <h3 class="articulation-item-title">${escapeHtml(unit.unit)}</h3>
+        <div class="articulation-lines">
+          ${unit.typologie ? `<div class="articulation-line"><strong>Typologie :</strong> ${escapeHtml(unit.typologie)}</div>` : ""}
+          ${unit.format ? `<div class="articulation-line"><strong>Format :</strong> ${escapeHtml(unit.format)}</div>` : ""}
+          ${unit.duree ? `<div class="articulation-line"><strong>Durée :</strong> ${escapeHtml(unit.duree)}</div>` : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="section-block">
+      <div class="section-inner">
+        <span class="section-title">Articulation de la formation</span>
+        <div class="articulation-grid">
+          ${unitsHtml}
+        </div>
+      </div>
     </div>
   `;
 }
@@ -263,6 +310,7 @@ function renderCards(data) {
           ${createInfoBlock("Indemnités PS", indemnites || "-")}
         </div>
 
+        ${createArticulationBlock(item)}
         ${createContextBlock(contexte, index)}
       </article>
     `;
