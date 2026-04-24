@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprendre les typologies et formats de formation - Graad</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --paper: #ffffff;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --blue: #2563eb;
+      --blue-soft: #dbeafe;
+      --green: #059669;
+      --green-soft: #d1fae5;
+      --orange: #f97316;
+      --orange-soft: #ffedd5;
+      --purple: #7c3aed;
+      --purple-soft: #ede9fe;
+      --pink: #db2777;
+      --pink-soft: #fce7f3;
+      --dark: #0f172a;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(124, 58, 237, 0.12), transparent 28%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #6d28d9 100%);
+      color: #fff;
+      border-radius: 32px;
+      padding: 42px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      right: -90px;
+      top: -120px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 850px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 19px;
+      color: rgba(255, 255, 255, 0.86);
+      max-width: 760px;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 22px 0 34px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 800;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .nav a span {
+      display: block;
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .nav a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 35px rgba(15, 23, 42, 0.1);
+    }
+
+    section {
+      margin-top: 42px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-end;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .section-heading p {
+      margin: 0;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .typologies-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .typologie-card {
+      width: 100%;
+      min-height: auto;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 23px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      margin: 0 0 14px;
+      color: #334155;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag.blue { background: var(--blue-soft); color: #1d4ed8; }
+    .tag.green { background: var(--green-soft); color: #047857; }
+    .tag.orange { background: var(--orange-soft); color: #c2410c; }
+    .tag.purple { background: var(--purple-soft); color: #6d28d9; }
+    .tag.pink { background: var(--pink-soft); color: #be185d; }
+    .tag.dark { background: #e2e8f0; color: #0f172a; }
+
+    .mini-title {
+      margin: 18px 0 8px;
+      color: var(--dark);
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #334155;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .typologie-epp .compare {
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+    }
+
+    .compare-box {
+      border-radius: 18px;
+      padding: 18px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+    }
+
+    .compare-box h4 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .step {
+      position: relative;
+      border-radius: 20px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      padding: 18px;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--dark);
+      color: white;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .step h4 {
+      margin: 0 0 6px;
+      font-size: 17px;
+    }
+
+    .step p {
+      margin: 0;
+      color: #475569;
+      font-size: 14px;
+    }
+
+    .format-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .format-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 7px;
+      background: var(--blue);
+    }
+
+    .format-card.green::before { background: var(--green); }
+    .format-card.orange::before { background: var(--orange); }
+    .format-card.purple::before { background: var(--purple); }
+    .format-card.pink::before { background: var(--pink); }
+
+    .use-case {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border-left: 5px solid var(--blue);
+      color: #334155;
+      font-size: 14px;
+    }
+
+    .use-case strong {
+      display: block;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .visual-example {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+      border: 1px solid var(--line);
+    }
+
+    .visual-example-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .visual-example-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--dark);
+      letter-spacing: -0.01em;
+    }
+
+    .visual-example-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .visual-example img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      border: 1px solid #dbe4f0;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      cursor: zoom-in;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .visual-example img:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(15, 23, 42, 0.86);
+      backdrop-filter: blur(8px);
+    }
+
+    .lightbox.is-open {
+      display: flex;
+    }
+
+    .lightbox-content {
+      position: relative;
+      width: min(96vw, 1500px);
+      max-height: 92vh;
+    }
+
+    .lightbox img {
+      display: block;
+      width: 100%;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 22px;
+      background: #ffffff;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--dark);
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      transition: transform 0.2s ease;
+    }
+
+    .lightbox-close:hover {
+      transform: scale(1.06);
+    }
+
+    .visual-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .visual-card {
+      min-width: 0;
+    }
+
+    .visual-card-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--dark);
+    }
+
+    .cheat-sheet {
+      background: #0f172a;
+      color: white;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .cheat-sheet h2 {
+      margin: 0 0 16px;
+      font-size: 32px;
+      letter-spacing: -0.03em;
+    }
+
+    .cheat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .cheat-item {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .cheat-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 17px;
+    }
+
+    .cheat-item span {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+    }
+
+    .talk-track {
+      background: #fff;
+      border-radius: 28px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    }
+
+    .talk-track h2 {
+      margin: 0 0 12px;
+      font-size: 32px;
+      letter-spacing: -0.03em;
+    }
+
+    .script {
+      margin-top: 14px;
+      padding: 20px;
+      border-radius: 20px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      color: #334155;
+      font-size: 16px;
+    }
+
+    .footer {
+      margin-top: 42px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .nav,
+      .grid-3,
+      .grid-2,
+      .typologies-layout,
+      .flow,
+      .cheat-grid,
+      .compare,
+      .visual-grid,
+      .typologie-epp .compare {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-heading p {
+        margin-top: 10px;
+      }
+
+      .hero {
+        padding: 30px 24px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        max-width: none;
+        padding: 0;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .card,
+      .hero,
+      .cheat-sheet,
+      .talk-track {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Mémo commercial · Graad</div>
+        <h1>Comprendre les typologies et formats de formation DPC</h1>
+        <p>
+          Une page simple pour expliquer rapidement ce que l’on vend, comment les formations se déroulent,
+          et ce que vit concrètement le professionnel de santé côté apprenant.
+        </p>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Navigation rapide">
+      <a href="#typologies">1. Typologies <span>EPP, formation continue, programme intégré</span></a>
+      <a href="#formats">2. Formats <span>E-learning, classe virtuelle, présentiel, mixte</span></a>
+      <a href="#synthese">3. Synthèse <span>La logique à retenir</span></a>
+      <a href="#pitch">4. Pitch commercial <span>Une formulation simple à reprendre</span></a>
+    </nav>
+
+    <section id="typologies">
+      <div class="section-heading">
+        <h2>1. Les grandes typologies de formation</h2>
+        <p>
+          La typologie répond à la question : <strong>“Quel est l’objectif pédagogique principal ?”</strong>
+          Est-ce qu’on forme, est-ce qu’on évalue les pratiques, ou est-ce qu’on combine les deux ?
+        </p>
+      </div>
+
+      <div class="typologies-layout">
+        <article class="card typologie-card typologie-epp">
+          <span class="tag blue">EPP</span>
+          <h3>Évaluation des pratiques professionnelles</h3>
+          <p>
+            L’EPP consiste à aider le professionnel de santé à analyser sa pratique réelle, à la comparer
+            à des recommandations ou critères attendus, puis à identifier des pistes d’amélioration.
+          </p>
+
+          <div class="mini-title">Ce que cela veut dire simplement</div>
+          <ul>
+            <li>On ne se contente pas de transmettre du savoir.</li>
+            <li>On fait réfléchir le professionnel sur ses habitudes de prise en charge.</li>
+            <li>On l’aide à repérer ce qui est conforme, perfectible ou à corriger.</li>
+          </ul>
+
+          <div class="compare">
+            <div class="compare-box">
+              <h4>Vignettes cliniques</h4>
+              <p>
+                Le professionnel répond à des situations cliniques courtes, réalistes, souvent sous forme
+                de cas patients. L’objectif est d’évaluer son raisonnement, ses réflexes et ses choix.
+              </p>
+              <ul>
+                <li>Format plus léger et scénarisé.</li>
+                <li>Idéal pour tester une conduite à tenir.</li>
+                <li>Ressemble à une succession de mini-cas pratiques.</li>
+              </ul>
+            </div>
+
+            <div class="compare-box">
+              <h4>Audit clinique</h4>
+              <p>
+                Le professionnel analyse plusieurs dossiers ou situations de sa propre pratique à partir
+                d’une grille de critères. Il mesure ses écarts, met en place des actions d’amélioration,
+                puis peut réévaluer sa pratique plus tard.
+              </p>
+              <ul>
+                <li>Format plus structuré et plus engageant.</li>
+                <li>Basé sur la pratique réelle du professionnel.</li>
+                <li>Souvent organisé en deux tours d’audit.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="visual-example">
+            <div class="visual-example-header">
+              <p class="visual-example-title">Exemples visuels</p>
+              <p class="visual-example-note">Deux façons concrètes de faire de l’EPP chez Graad</p>
+            </div>
+            <div class="visual-grid">
+              <div class="visual-card">
+                <p class="visual-card-title">Vignette clinique</p>
+                <img src="images/VC.png" alt="Exemple visuel d’une vignette clinique avec cas patient, question ciblée et feedback pédagogique" loading="lazy" />
+              </div>
+              <div class="visual-card">
+                <p class="visual-card-title">Audit clinique</p>
+                <img src="images/AC.png" alt="Exemple visuel d’un audit clinique avec grille d’audit, critères de référence et plan d’action" loading="lazy" />
+              </div>
+            </div>
+          </div>
+
+          <div class="use-case">
+            <strong>À quoi ça ressemble pour le professionnel ?</strong>
+            Il se connecte, répond à des cas ou complète une grille d’audit, prend du recul sur sa pratique,
+            puis repart avec des axes d’amélioration concrets.
+          </div>
+        </article>
+
+        <article class="card typologie-card">
+          <span class="tag green">Formation continue</span>
+          <h3>Acquisition ou actualisation des connaissances</h3>
+          <p>
+            La formation continue vise à transmettre, actualiser ou renforcer des connaissances et compétences.
+            C’est le format le plus intuitif : le professionnel apprend, révise, approfondit, puis valide ses acquis.
+          </p>
+
+          <div class="mini-title">Ce que cela permet</div>
+          <ul>
+            <li>Mettre à jour ses connaissances scientifiques ou réglementaires.</li>
+            <li>Comprendre de nouvelles recommandations de prise en charge.</li>
+            <li>Renforcer ses compétences sur un sujet précis.</li>
+            <li>Se former à une méthode, une pathologie, une conduite à tenir ou un outil.</li>
+          </ul>
+
+          <div class="visual-example">
+            <div class="visual-example-header">
+              <p class="visual-example-title">Exemple visuel</p>
+              <p class="visual-example-note">Parcours type d’une formation continue</p>
+            </div>
+            <img src="images/FC.png" alt="Exemple visuel d’une formation continue avec modules pédagogiques, quiz, cas clinique, fiche de synthèse et évaluation finale" loading="lazy" />
+          </div>
+
+          <div class="use-case">
+            <strong>À quoi ça ressemble pour le professionnel ?</strong>
+            Il suit des modules, regarde des vidéos, lit des contenus, participe à des échanges ou à des cas pratiques,
+            puis réalise généralement des quiz ou exercices pour valider sa progression.
+          </div>
+        </article>
+
+        <article class="card typologie-card">
+          <span class="tag purple">Programme intégré</span>
+          <h3>Une combinaison entre pratique et formation</h3>
+          <p>
+            Le programme intégré associe plusieurs approches dans un même parcours. Chez Graad, il peut par exemple
+            combiner une EPP, une formation continue, puis une nouvelle phase d’EPP pour mesurer l’évolution des pratiques.
+          </p>
+
+          <div class="flow">
+            <div class="step">
+              <div class="step-number">1</div>
+              <h4>Audit initial</h4>
+              <p>Le professionnel évalue sa pratique actuelle à partir de situations ou critères précis.</p>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <h4>Formation</h4>
+              <p>Il suit un apport pédagogique pour comprendre les recommandations et améliorer ses pratiques.</p>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <h4>Audit final</h4>
+              <p>Il réévalue sa pratique pour mesurer les progrès et consolider les changements.</p>
+            </div>
+          </div>
+
+          <div class="visual-example">
+            <div class="visual-example-header">
+              <p class="visual-example-title">Exemple visuel</p>
+              <p class="visual-example-note">Audit initial → formation → audit final</p>
+            </div>
+            <img src="images/PI.png" alt="Exemple visuel d’un programme intégré combinant audit clinique initial, formation continue ciblée et audit clinique final" loading="lazy" />
+          </div>
+
+          <div class="use-case">
+            <strong>À quoi ça ressemble pour le professionnel ?</strong>
+            Il commence par observer sa pratique, se forme, puis revient sur sa pratique quelques semaines ou mois plus tard.
+            C’est un parcours plus complet, très orienté amélioration concrète.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="formats">
+      <div class="section-heading">
+        <h2>2. Les formats de formation</h2>
+        <p>
+          Le format répond à la question : <strong>“Comment la formation est-elle suivie ?”</strong>
+          Une même typologie peut être proposée dans plusieurs formats selon le besoin pédagogique, la cible et les contraintes.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <article class="card format-card">
+          <span class="tag blue">E-learning</span>
+          <h3>Formation à distance, en autonomie</h3>
+          <p>
+            Le professionnel suit la formation en ligne, à son rythme, depuis une plateforme. Il avance module par module,
+            avec des contenus pédagogiques, des vidéos, des activités interactives et des évaluations.
+          </p>
+          <div class="mini-title">Articulation type</div>
+          <ul>
+            <li>Évaluation initiale ou quiz de positionnement.</li>
+            <li>Modules pédagogiques découpés en séquences courtes.</li>
+            <li>Cas cliniques, exercices, quiz ou activités réflexives.</li>
+            <li>Évaluation finale et validation du parcours.</li>
+          </ul>
+          <div class="use-case">
+            <strong>Argument simple</strong>
+            Le e-learning est pratique pour les professionnels qui veulent se former sans contrainte horaire fixe.
+          </div>
+        </article>
+
+        <article class="card format-card green">
+          <span class="tag green">Classe virtuelle</span>
+          <h3>Formation à distance, en direct avec un formateur</h3>
+          <p>
+            La classe virtuelle se déroule en ligne à une date et une heure prévues. Le professionnel se connecte à une session
+            animée par un formateur, avec des échanges, des cas pratiques et des temps de questions-réponses.
+          </p>
+          <div class="mini-title">Articulation type</div>
+          <ul>
+            <li>Accueil, rappel des objectifs et introduction du sujet.</li>
+            <li>Apports théoriques structurés par le formateur.</li>
+            <li>Échanges, cas cliniques, sondages ou exercices collectifs.</li>
+            <li>Synthèse, réponses aux questions et évaluation.</li>
+          </ul>
+          <div class="use-case">
+            <strong>Argument simple</strong>
+            La classe virtuelle garde la souplesse du distanciel, avec l’interaction humaine du direct.
+          </div>
+        </article>
+
+        <article class="card format-card orange">
+          <span class="tag orange">Présentiel</span>
+          <h3>Formation physique, sur site</h3>
+          <p>
+            Le professionnel participe à une formation dans un lieu défini, avec un formateur et un groupe. Ce format favorise
+            les échanges directs, les ateliers, les mises en situation et la dynamique collective.
+          </p>
+          <div class="mini-title">Articulation type</div>
+          <ul>
+            <li>Accueil des participants et cadrage de la journée.</li>
+            <li>Apports pédagogiques en salle.</li>
+            <li>Ateliers, cas pratiques, jeux de rôle ou travaux en sous-groupes.</li>
+            <li>Débriefing collectif, synthèse et évaluation finale.</li>
+          </ul>
+          <div class="use-case">
+            <strong>Argument simple</strong>
+            Le présentiel est idéal quand on veut favoriser l’échange, la pratique et l’engagement collectif.
+          </div>
+        </article>
+
+        <article class="card format-card purple">
+          <span class="tag purple">Mixte</span>
+          <h3>E-learning + classe virtuelle</h3>
+          <p>
+            Ce format combine une partie en autonomie et une partie en direct à distance. Le professionnel prépare ou découvre
+            les notions clés en e-learning, puis les approfondit en classe virtuelle avec le formateur.
+          </p>
+          <div class="mini-title">Articulation type</div>
+          <ul>
+            <li>Partie e-learning : contenus, quiz, cas cliniques ou préparation.</li>
+            <li>Classe virtuelle : échanges, approfondissement, cas pratiques, questions.</li>
+            <li>Évaluation finale ou activité de synthèse.</li>
+          </ul>
+          <div class="use-case">
+            <strong>Argument simple</strong>
+            Le mixte permet de gagner du temps en direct : les bases sont vues en autonomie, puis la session sert à échanger et pratiquer.
+          </div>
+        </article>
+
+        <article class="card format-card pink">
+          <span class="tag pink">Mixte</span>
+          <h3>E-learning + présentiel</h3>
+          <p>
+            Ce format associe une préparation en ligne et une journée ou demi-journée en présentiel. Le professionnel arrive
+            avec des bases communes, ce qui permet de consacrer le temps sur site aux exercices, ateliers et échanges.
+          </p>
+          <div class="mini-title">Articulation type</div>
+          <ul>
+            <li>Avant le présentiel : modules e-learning de préparation.</li>
+            <li>En présentiel : cas pratiques, ateliers, simulations, discussions.</li>
+            <li>Après ou en fin de parcours : évaluation, synthèse ou plan d’action.</li>
+          </ul>
+          <div class="use-case">
+            <strong>Argument simple</strong>
+            C’est un format très efficace quand on veut combiner souplesse, préparation individuelle et richesse des échanges en salle.
+          </div>
+        </article>
+
+        <article class="card format-card green">
+          <span class="tag dark">Point clé</span>
+          <h3>Typologie ≠ format</h3>
+          <p>
+            Une erreur fréquente consiste à mélanger les deux notions. Une EPP, une formation continue ou un programme intégré
+            désignent le <strong>type d’action</strong>. Le e-learning, la classe virtuelle, le présentiel ou le mixte désignent le
+            <strong>mode de réalisation</strong>.
+          </p>
+          <div class="use-case">
+            <strong>Exemple</strong>
+            Une formation continue peut être en e-learning, en classe virtuelle ou en présentiel. Une EPP peut aussi être suivie en ligne,
+            notamment lorsqu’elle repose sur des vignettes cliniques ou un audit clinique guidé depuis la plateforme.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="synthese" class="cheat-sheet">
+      <h2>3. La logique à retenir</h2>
+      <div class="cheat-grid">
+        <div class="cheat-item">
+          <strong>EPP</strong>
+          <span>On part de la pratique du professionnel pour l’aider à l’évaluer et à l’améliorer.</span>
+        </div>
+        <div class="cheat-item">
+          <strong>Formation continue</strong>
+          <span>On transmet ou actualise des connaissances, avec des contenus pédagogiques et des évaluations.</span>
+        </div>
+        <div class="cheat-item">
+          <strong>Programme intégré</strong>
+          <span>On combine plusieurs étapes, souvent pratique initiale, formation, puis réévaluation.</span>
+        </div>
+        <div class="cheat-item">
+          <strong>E-learning</strong>
+          <span>À distance, en autonomie, depuis une plateforme.</span>
+        </div>
+        <div class="cheat-item">
+          <strong>Classe virtuelle</strong>
+          <span>À distance, en direct, avec un formateur et des interactions.</span>
+        </div>
+        <div class="cheat-item">
+          <strong>Présentiel</strong>
+          <span>Sur site, en groupe, avec ateliers et échanges directs.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="pitch" class="talk-track">
+      <h2>4. Formulation simple pour les commerciaux</h2>
+      <p>
+        Voici une phrase courte à reprendre lorsqu’un professionnel ou un partenaire ne comprend pas la différence entre les actions.
+      </p>
+      <div class="script">
+        “Chez Graad, il faut distinguer deux choses : le type de formation et son format. Le type correspond à l’objectif :
+        soit on forme le professionnel avec de la formation continue, soit on l’aide à analyser et améliorer sa pratique avec une EPP,
+        soit on combine les deux dans un programme intégré. Le format, lui, correspond simplement à la manière dont il suit le parcours :
+        en e-learning, en classe virtuelle, en présentiel ou en mixte.”
+      </div>
+
+      <div class="mini-title">Version encore plus courte</div>
+      <div class="script">
+        “La typologie explique ce qu’on cherche à faire : former, évaluer les pratiques ou combiner les deux.
+        Le format explique comment le professionnel suit la formation : en ligne, en direct, en salle ou en mixte.”
+      </div>
+    </section>
+
+    <p class="footer">
+      Document interne Graad · Support d’aide à la compréhension commerciale · À adapter selon les offres, professions ciblées et contraintes DPC applicables.
+    </p>
+  </main>
+
+  <div class="lightbox" id="imageLightbox" aria-hidden="true" role="dialog" aria-label="Aperçu de l’image en grand">
+    <div class="lightbox-content">
+      <button class="lightbox-close" type="button" aria-label="Fermer l’image">×</button>
+      <img src="" alt="" id="lightboxImage" />
+    </div>
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const closeButton = document.querySelector('.lightbox-close');
+    const clickableImages = document.querySelectorAll('.visual-example img');
+
+    function openLightbox(image) {
+      lightboxImage.src = image.src;
+      lightboxImage.alt = image.alt || 'Image agrandie';
+      lightbox.classList.add('is-open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxImage.src = '';
+      document.body.style.overflow = '';
+    }
+
+    clickableImages.forEach((image) => {
+      image.addEventListener('click', () => openLightbox(image));
+    });
+
+    closeButton.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && lightbox.classList.contains('is-open')) {
+        closeLightbox();
+      }
+    });
+  </script>
+</body>
+</html>
