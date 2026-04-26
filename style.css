@@ -56,24 +56,27 @@ body {
 /* HEADER */
 
 .header-content {
-  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "brand . actions"
+    "inner inner inner";
+  row-gap: 18px;
+  column-gap: 24px;
+  align-items: start;
   background: rgba(255, 255, 255, 0.76);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(231, 223, 207, 0.98);
   border-radius: 28px;
   padding: 28px 32px 34px;
   box-shadow: var(--shadow);
-  min-height: 280px;
 }
 
 .header-brand {
-  position: absolute;
-  top: 34px;
-  left: 32px;
+  grid-area: brand;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
-  z-index: 2;
 }
 
 .header-logo {
@@ -84,15 +87,12 @@ body {
 }
 
 .header-topbar {
-  position: absolute;
-  top: 18px;
-  right: 22px;
+  grid-area: actions;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 10px;
-  margin-bottom: 0;
-  flex-wrap: nowrap;
-  z-index: 2;
+  flex-wrap: wrap;
 }
 
 .header-link-button {
@@ -119,13 +119,13 @@ body {
 }
 
 .header-inner {
+  grid-area: inner;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 220px;
-  padding: 12px 210px 0;
+  padding-top: 6px;
 }
 
 .eyebrow {
@@ -140,9 +140,9 @@ body {
 
 h1 {
   margin: 0;
-  max-width: 900px;
+  max-width: 980px;
   width: 100%;
-  font-size: clamp(2rem, 4vw, 3.3rem);
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
   line-height: 1.08;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -153,7 +153,7 @@ h1 {
 
 .subtitle {
   margin: 16px 0 0;
-  max-width: 900px;
+  max-width: 980px;
   width: 100%;
   color: var(--muted);
   font-size: 15px;
@@ -789,43 +789,32 @@ h1 {
 
 /* RESPONSIVE */
 
-@media (max-width: 1100px) {
-  .header-inner {
-    padding: 26px 160px 0;
-  }
-
-  .header-logo {
-    width: 150px;
-  }
-}
-
 @media (max-width: 980px) {
   .header-content {
-    min-height: auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "brand"
+      "actions"
+      "inner";
+    row-gap: 14px;
     padding: 24px 18px 28px;
+    text-align: center;
   }
 
   .header-brand {
-    position: static;
     justify-content: center;
-    margin-bottom: 8px;
+  }
+
+  .header-topbar {
+    justify-content: center;
+  }
+
+  .header-inner {
+    padding-top: 0;
   }
 
   .header-logo {
     width: 160px;
-  }
-
-  .header-topbar {
-    position: static;
-    justify-content: center;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-
-  .header-inner {
-    min-height: auto;
-    padding: 0;
-    text-align: center;
   }
 
   .eyebrow,
