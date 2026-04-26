@@ -90,7 +90,9 @@ body {
   right: 22px;
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
   margin-bottom: 0;
+  flex-wrap: wrap;
 }
 
 .header-link-button {
