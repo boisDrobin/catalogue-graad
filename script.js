@@ -25,6 +25,7 @@ function splitMultiValue(value) {
 }
 
 function fillSelect(select, values) {
+  select.innerHTML = "";
   values.forEach(value => {
     const option = document.createElement("option");
     option.value = value;
@@ -129,123 +130,96 @@ function isZeroOrEmptyDuration(value) {
   return raw === "0";
 }
 
-function getTypeEppHelpContent() {
-  return `
-    <div class="info-popover-title">Type d’EPP</div>
-    <p><strong>Audit clinique</strong> : démarche qui compare les pratiques à des références pour identifier des pistes d’amélioration.</p>
-    <p><strong>Vignette clinique</strong> : cas pratique permettant d’analyser le raisonnement et les choix professionnels.</p>
-  `;
+function normalizeForMatch(value) {
+  return cleanNotionText(value)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’']/g, "'")
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function getTypologieHelpContent() {
-  return `
-    <div class="info-popover-title">Typologie</div>
-    <p><strong>Formation continue</strong> : temps de formation destiné à actualiser ou renforcer les connaissances et compétences.</p>
-    <p><strong>Évaluation des pratiques professionnelles</strong> : démarche qui permet d’analyser sa pratique pour l’améliorer.</p>
-    <p><strong>Programme intégré</strong> : formation qui combine un temps de formation continue et un temps d’évaluation des pratiques professionnelles.</p>
-  `;
+function getPublicFamily(rawPublic) {
+  const normalized = normalizeForMatch(rawPublic);
+
+  const medecinsKeywords = [
+    "generaliste",
+    "generalistes",
+    "medecine generale",
+    "cardiologie",
+    "cardiologue",
+    "cardiologues",
+    "medecine cardiovasculaire",
+    "gynecologie",
+    "gynecologue",
+    "gynecologues",
+    "gynecologie medicale",
+    "gynecologie obstetrique",
+    "ophtalmologie",
+    "ophtalmologue",
+    "ophtalmologues",
+    "pediatrie",
+    "pediatre",
+    "pediatres",
+    "dermatologie",
+    "dermatologie et venereologie",
+    "dermatologue",
+    "dermatologues",
+    "anesthesie reanimation",
+    "anesthesiste",
+    "anesthesistes",
+    "immunologie",
+    "immunologue",
+    "immunologues",
+    "medecine interne",
+    "endocrinologie",
+    "endocrinologue",
+    "endocrinologues",
+    "oncologie",
+    "oncologue",
+    "oncologues",
+    "psychiatrie",
+    "psychiatre",
+    "psychiatres",
+    "hepato gastro enterologie",
+    "hepato gastro enterologue",
+    "hepato gastro enterologues",
+    "geriatrie",
+    "geriatre",
+    "geriatres"
+  ];
+
+  if (medecinsKeywords.some(keyword => normalized === keyword)) return "medecins";
+  if (
+    normalized === "infirmier diplome d'etat (ide)" ||
+    normalized === "infirmier diplome d'etat ide"
+  ) return "infirmiers";
+  if (
+    normalized === "pharmacien" ||
+    normalized === "pharmacien titulaire d'officine" ||
+    normalized === "pharmacien adjoint d'officine"
+  ) return "pharmaciens";
+  if (
+    normalized === "sage femme" ||
+    normalized === "sage-femme" ||
+    normalized === "sages-femmes" ||
+    normalized === "sages femmes"
+  ) return "sages-femmes";
+  if (
+    normalized === "masseur kinesitherapeute" ||
+    normalized === "masseurs kinesitherapeutes"
+  ) return "kines";
+  if (normalized === "chirurgie dentaire (omnipraticiens)") return "dentistes";
+
+  return "";
 }
 
-function getInfoIcon(label) {
-  const icons = {
-    "Numéro de dépôt": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 7h11"></path>
-        <path d="M9 12h11"></path>
-        <path d="M9 17h11"></path>
-        <path d="M4 7h.01"></path>
-        <path d="M4 12h.01"></path>
-        <path d="M4 17h.01"></path>
-      </svg>
-    `,
-    "Public concerné": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-    `,
-    "Format": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="14" rx="2"></rect>
-        <path d="M8 20h8"></path>
-        <path d="M12 18v2"></path>
-      </svg>
-    `,
-    "Typologie": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 6h16"></path>
-        <path d="M4 12h10"></path>
-        <path d="M4 18h7"></path>
-      </svg>
-    `,
-    "Type d’EPP": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 20h9"></path>
-        <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"></path>
-      </svg>
-    `,
-    "Durée totale": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"></circle>
-        <path d="M12 7v5l3 3"></path>
-      </svg>
-    `,
-    "ODPC": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4Z"></path>
-      </svg>
-    `,
-    "Formateur(s)": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 10v6"></path>
-        <path d="M2 10v6"></path>
-        <path d="M12 3 2 8l10 5 10-5-10-5Z"></path>
-        <path d="M6 10.8V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.2"></path>
-      </svg>
-    `,
-    "Prise en charge": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 1v22"></path>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6"></path>
-      </svg>
-    `,
-    "Indemnités PS": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-        <circle cx="12" cy="12" r="2.5"></circle>
-        <path d="M6 12h.01"></path>
-        <path d="M18 12h.01"></path>
-      </svg>
-    `
-  };
+function getMedicalSpecialtyLabel(rawPublic) {
+  const normalized = normalizeForMatch(rawPublic);
 
-  return icons[label] || `
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="9"></circle>
-      <path d="M12 8h.01"></path>
-      <path d="M11 12h1v4h1"></path>
-    </svg>
-  `;
-}
-
-function getPublicBadge(publics) {
-  if (!publics || !publics.length) return "";
-
-  const cleaned = publics.map(v => cleanNotionText(v)).filter(Boolean);
-
-  const normalizeForMatch = (value) =>
-    value
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[’']/g, "'")
-      .replace(/-/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const medicalBadgeByNormalizedLabel = {
+  const map = {
     "generaliste": "Médecin - Généraliste",
     "generalistes": "Médecin - Généraliste",
     "medecine generale": "Médecin - Médecine générale",
@@ -256,14 +230,16 @@ function getPublicBadge(publics) {
     "gynecologie": "Médecin - Gynécologie",
     "gynecologue": "Médecin - Gynécologie",
     "gynecologues": "Médecin - Gynécologie",
+    "gynecologie medicale": "Médecin - Gynécologie",
+    "gynecologie obstetrique": "Médecin - Gynécologie",
     "ophtalmologie": "Médecin - Ophtalmologie",
     "ophtalmologue": "Médecin - Ophtalmologie",
     "ophtalmologues": "Médecin - Ophtalmologie",
     "pediatrie": "Médecin - Pédiatrie",
     "pediatre": "Médecin - Pédiatrie",
     "pediatres": "Médecin - Pédiatrie",
-    "dermatologie et venereologie": "Médecin - Dermatologie et vénéréologie",
     "dermatologie": "Médecin - Dermatologie",
+    "dermatologie et venereologie": "Médecin - Dermatologie et vénéréologie",
     "dermatologue": "Médecin - Dermatologie",
     "dermatologues": "Médecin - Dermatologie",
     "anesthesie reanimation": "Médecin - Anesthésie-réanimation",
@@ -290,15 +266,51 @@ function getPublicBadge(publics) {
     "geriatres": "Médecin - Gériatrie"
   };
 
+  return map[normalized] || "";
+}
+
+function getProfessionFamiliesForCard(publics) {
+  return [...new Set(
+    (publics || [])
+      .map(getPublicFamily)
+      .filter(Boolean)
+  )];
+}
+
+function getMedicalSpecialtiesForCard(publics) {
+  return [...new Set(
+    (publics || [])
+      .map(getMedicalSpecialtyLabel)
+      .filter(Boolean)
+  )];
+}
+
+function getTypeEppHelpContent() {
+  return `
+    <div class="info-popover-title">Type d’EPP</div>
+    <p><strong>Audit clinique</strong> : démarche qui compare les pratiques à des références pour identifier des pistes d’amélioration.</p>
+    <p><strong>Vignette clinique</strong> : cas pratique permettant d’analyser le raisonnement et les choix professionnels.</p>
+  `;
+}
+
+function getTypologieHelpContent() {
+  return `
+    <div class="info-popover-title">Typologie</div>
+    <p><strong>Formation continue</strong> : temps de formation destiné à actualiser ou renforcer les connaissances et compétences.</p>
+    <p><strong>Évaluation des pratiques professionnelles</strong> : démarche qui permet d’analyser sa pratique pour l’améliorer.</p>
+    <p><strong>Programme intégré</strong> : formation qui combine un temps de formation continue et un temps d’évaluation des pratiques professionnelles.</p>
+  `;
+}
+
+function getPublicBadge(publics) {
+  if (!publics || !publics.length) return "";
+
+  const cleaned = publics.map(v => cleanNotionText(v)).filter(Boolean);
+
   if (cleaned.length === 1) {
-    const raw = cleaned[0];
-    const normalized = normalizeForMatch(raw);
-
-    if (medicalBadgeByNormalizedLabel[normalized]) {
-      return medicalBadgeByNormalizedLabel[normalized];
-    }
-
-    return raw;
+    const medicalLabel = getMedicalSpecialtyLabel(cleaned[0]);
+    if (medicalLabel) return medicalLabel;
+    return cleaned[0];
   }
 
   const normalized = cleaned.map(normalizeForMatch);
@@ -750,6 +762,36 @@ function setSubtitle(exportDate, lastModifiedDate) {
   subtitle.textContent = "Catalogue mis à jour à partir d’un export Notion";
 }
 
+function updateSpecialtyFilterOptions() {
+  const familySelect = document.getElementById("filter-public-family");
+  const specialtyGroup = document.getElementById("specialty-filter-group");
+  const specialtySelect = document.getElementById("filter-specialty");
+
+  if (familySelect.value !== "medecins") {
+    specialtyGroup.classList.add("is-hidden");
+    specialtySelect.innerHTML = `<option value="">Toutes</option>`;
+    specialtySelect.value = "";
+    return;
+  }
+
+  const specialties = [...new Set(
+    catalogue.flatMap(item => {
+      const publics = splitMultiValue(getField(item, ["Public concerné", "Public Concerné"]));
+      return getMedicalSpecialtiesForCard(publics);
+    })
+  )].sort((a, b) => a.localeCompare(b, "fr"));
+
+  specialtyGroup.classList.remove("is-hidden");
+
+  specialtySelect.innerHTML = `<option value="">Toutes</option>`;
+  specialties.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value.replace(/^Médecin\s-\s/, "");
+    specialtySelect.appendChild(option);
+  });
+}
+
 function renderCards(data) {
   const results = document.getElementById("results");
   const resultsCount = document.getElementById("results-count");
@@ -902,8 +944,9 @@ function renderCards(data) {
 
 function applyFilters() {
   const searchValue = normalize(document.getElementById("search").value).toLowerCase();
+  const familyValue = normalize(document.getElementById("filter-public-family").value);
+  const specialtyValue = normalize(document.getElementById("filter-specialty").value);
   const formatValue = normalize(document.getElementById("filter-format").value);
-  const publicValue = normalize(document.getElementById("filter-public").value);
   const typologieValue = normalize(document.getElementById("filter-typologie").value);
 
   const filtered = catalogue.filter(item => {
@@ -924,11 +967,12 @@ function applyFilters() {
       "Numero"
     ])).toLowerCase();
 
-    const publicConcerne = splitMultiValue(getField(item, [
+    const publics = splitMultiValue(getField(item, [
       "Public concerné",
       "Public Concerné"
     ]));
 
+    const publicLabels = publics.map(v => v.toLowerCase());
     const formatDisplay = formatLabel(getField(item, [
       "Format (ANDPC)",
       "Format ANDPC"
@@ -942,18 +986,35 @@ function applyFilters() {
       "Contexte"
     ])).toLowerCase();
 
+    const families = getProfessionFamiliesForCard(publics);
+    const medicalSpecialties = getMedicalSpecialtiesForCard(publics);
+
     const matchesSearch =
       !searchValue ||
       title.includes(searchValue) ||
       numeroDepot.includes(searchValue) ||
-      publicConcerne.join(", ").toLowerCase().includes(searchValue) ||
+      publicLabels.join(", ").includes(searchValue) ||
       contexte.includes(searchValue);
 
+    const matchesFamily =
+      !familyValue ||
+      families.includes(familyValue);
+
+    const matchesSpecialty =
+      familyValue !== "medecins" ||
+      !specialtyValue ||
+      medicalSpecialties.includes(specialtyValue);
+
     const matchesFormat = !formatValue || formatDisplay === formatValue;
-    const matchesPublic = !publicValue || publicConcerne.includes(publicValue);
     const matchesTypologie = !typologieValue || typologieDisplay === typologieValue;
 
-    return matchesSearch && matchesFormat && matchesPublic && matchesTypologie;
+    return (
+      matchesSearch &&
+      matchesFamily &&
+      matchesSpecialty &&
+      matchesFormat &&
+      matchesTypologie
+    );
   });
 
   renderCards(filtered);
@@ -961,30 +1022,45 @@ function applyFilters() {
 
 function initFilters(data) {
   const formatSelect = document.getElementById("filter-format");
-  const publicSelect = document.getElementById("filter-public");
   const typologieSelect = document.getElementById("filter-typologie");
+  const familySelect = document.getElementById("filter-public-family");
+  const specialtySelect = document.getElementById("filter-specialty");
 
   const formats = [...new Set(
     data.map(item => formatLabel(getField(item, ["Format (ANDPC)", "Format ANDPC"]))).filter(Boolean)
-  )].sort((a, b) => a.localeCompare(b, "fr"));
-
-  const publics = [...new Set(
-    data.flatMap(item =>
-      splitMultiValue(getField(item, ["Public concerné", "Public Concerné"]))
-    ).filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, "fr"));
 
   const typologies = [...new Set(
     data.map(item => formatLabel(getField(item, ["Typologie de formation"]))).filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, "fr"));
 
-  fillSelect(formatSelect, formats);
-  fillSelect(publicSelect, publics);
-  fillSelect(typologieSelect, typologies);
+  formatSelect.innerHTML = `<option value="">Tous</option>`;
+  formats.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    formatSelect.appendChild(option);
+  });
+
+  typologieSelect.innerHTML = `<option value="">Toutes</option>`;
+  typologies.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    typologieSelect.appendChild(option);
+  });
+
+  specialtySelect.innerHTML = `<option value="">Toutes</option>`;
 
   document.getElementById("search").addEventListener("input", applyFilters);
+
+  familySelect.addEventListener("change", () => {
+    updateSpecialtyFilterOptions();
+    applyFilters();
+  });
+
+  specialtySelect.addEventListener("change", applyFilters);
   formatSelect.addEventListener("change", applyFilters);
-  publicSelect.addEventListener("change", applyFilters);
   typologieSelect.addEventListener("change", applyFilters);
 }
 
@@ -1018,6 +1094,7 @@ async function loadCatalogue() {
     });
 
     initFilters(catalogue);
+    updateSpecialtyFilterOptions();
     renderCards(catalogue);
   } catch (error) {
     console.error(error);
