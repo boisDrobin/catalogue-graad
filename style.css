@@ -371,6 +371,54 @@ h1 {
   border-color: #7f6a57;
 }
 
+.badge-profession-medecins {
+  background: #eef2ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+}
+
+.badge-profession-infirmiers {
+  background: #ecfeff;
+  color: #0f766e;
+  border-color: #a5f3fc;
+}
+
+.badge-profession-pharmaciens {
+  background: #f0fdf4;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+
+.badge-profession-sagesfemmes {
+  background: #fdf2f8;
+  color: #be185d;
+  border-color: #fbcfe8;
+}
+
+.badge-profession-kines {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fdba74;
+}
+
+.badge-profession-dentistes {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.badge-profession-multi {
+  background: #f5f3ff;
+  color: #6d28d9;
+  border-color: #ddd6fe;
+}
+
+.badge-profession-default {
+  background: #f8f5ef;
+  color: #665f54;
+  border-color: #e7dece;
+}
+
 .card-toggle {
   display: inline-flex;
   align-items: center;
