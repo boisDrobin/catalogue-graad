@@ -24,6 +24,15 @@ function splitMultiValue(value) {
     .filter(Boolean);
 }
 
+function fillSelect(select, values) {
+  values.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  });
+}
+
 function escapeHtml(value) {
   return String(value || "")
     .replace(/&/g, "&amp;")
@@ -118,194 +127,6 @@ function isZeroOrEmptyDuration(value) {
   }
 
   return raw === "0";
-}
-
-function normalizeForMatch(value) {
-  return cleanNotionText(value)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[’']/g, "'")
-    .replace(/-/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function getPublicFamily(rawPublic) {
-  const normalized = normalizeForMatch(rawPublic);
-
-  const medecinsKeywords = [
-    "allergologie",
-    "generaliste",
-    "generalistes",
-    "medecine generale",
-    "cardiologie",
-    "cardiologue",
-    "cardiologues",
-    "medecine cardiovasculaire",
-    "gynecologie",
-    "gynecologue",
-    "gynecologues",
-    "gynecologie medicale",
-    "gynecologie obstetrique",
-    "ophtalmologie",
-    "ophtalmologue",
-    "ophtalmologues",
-    "pediatrie",
-    "pediatre",
-    "pediatres",
-    "dermatologie",
-    "dermatologie et venereologie",
-    "dermatologue",
-    "dermatologues",
-    "anesthesie reanimation",
-    "anesthesiste",
-    "anesthesistes",
-    "immunologie",
-    "immunologue",
-    "immunologues",
-    "medecine interne",
-    "medecine interne et immunologie clinique",
-    "endocrinologie",
-    "endocrinologie diabetologie nutrition",
-    "endocrinologue",
-    "endocrinologues",
-    "oncologie",
-    "oncologue",
-    "oncologues",
-    "psychiatrie",
-    "psychiatre",
-    "psychiatres",
-    "hepato gastro enterologie",
-    "hepato gastro enterologue",
-    "hepato gastro enterologues",
-    "geriatrie",
-    "geriatrie gerontologie",
-    "geriatre",
-    "geriatres",
-    "maladies infectieuses et tropicales",
-    "medecine d'urgence",
-    "medecine d urgence",
-    "medecine physique et de readaptation",
-    "medecine vasculaire",
-    "neurologie",
-    "nephrologie",
-    "pneumologie",
-    "radiologie et imagerie medicale",
-    "rhumatologie"
-  ];
-
-  if (medecinsKeywords.includes(normalized)) return "medecins";
-
-  if (
-    normalized === "infirmier diplome d'etat (ide)" ||
-    normalized === "infirmier diplome d'etat ide"
-  ) return "infirmiers";
-
-  if (
-    normalized === "pharmacien" ||
-    normalized === "pharmacien titulaire d'officine" ||
-    normalized === "pharmacien adjoint d'officine"
-  ) return "pharmaciens";
-
-  if (
-    normalized === "sage femme" ||
-    normalized === "sage-femme" ||
-    normalized === "sages-femmes" ||
-    normalized === "sages femmes"
-  ) return "sages-femmes";
-
-  if (
-    normalized === "masseur kinesitherapeute" ||
-    normalized === "masseurs kinesitherapeutes"
-  ) return "kines";
-
-  if (normalized === "chirurgie dentaire (omnipraticiens)") return "dentistes";
-
-  return "";
-}
-
-function getMedicalSpecialtyLabel(rawPublic) {
-  const normalized = normalizeForMatch(rawPublic);
-
-  const map = {
-    "allergologie": "Médecin - Allergologie",
-    "generaliste": "Médecin - Généraliste",
-    "generalistes": "Médecin - Généraliste",
-    "medecine generale": "Médecin - Médecine générale",
-    "cardiologie": "Médecin - Cardiologie",
-    "cardiologue": "Médecin - Cardiologie",
-    "cardiologues": "Médecin - Cardiologie",
-    "medecine cardiovasculaire": "Médecin - Médecine cardiovasculaire",
-    "gynecologie": "Médecin - Gynécologie",
-    "gynecologue": "Médecin - Gynécologie",
-    "gynecologues": "Médecin - Gynécologie",
-    "gynecologie medicale": "Médecin - Gynécologie",
-    "gynecologie obstetrique": "Médecin - Gynécologie",
-    "ophtalmologie": "Médecin - Ophtalmologie",
-    "ophtalmologue": "Médecin - Ophtalmologie",
-    "ophtalmologues": "Médecin - Ophtalmologie",
-    "pediatrie": "Médecin - Pédiatrie",
-    "pediatre": "Médecin - Pédiatrie",
-    "pediatres": "Médecin - Pédiatrie",
-    "dermatologie": "Médecin - Dermatologie",
-    "dermatologie et venereologie": "Médecin - Dermatologie et vénéréologie",
-    "dermatologue": "Médecin - Dermatologie",
-    "dermatologues": "Médecin - Dermatologie",
-    "anesthesie reanimation": "Médecin - Anesthésie-réanimation",
-    "anesthesiste": "Médecin - Anesthésie-réanimation",
-    "anesthesistes": "Médecin - Anesthésie-réanimation",
-    "immunologie": "Médecin - Immunologie",
-    "immunologue": "Médecin - Immunologie",
-    "immunologues": "Médecin - Immunologie",
-    "medecine interne": "Médecin - Médecine interne",
-    "medecine interne et immunologie clinique": "Médecin - Médecine interne et immunologie clinique",
-    "endocrinologie": "Médecin - Endocrinologie",
-    "endocrinologie diabetologie nutrition": "Médecin - Endocrinologie-diabétologie-nutrition",
-    "endocrinologue": "Médecin - Endocrinologie",
-    "endocrinologues": "Médecin - Endocrinologie",
-    "oncologie": "Médecin - Oncologie",
-    "oncologue": "Médecin - Oncologie",
-    "oncologues": "Médecin - Oncologie",
-    "psychiatrie": "Médecin - Psychiatrie",
-    "psychiatre": "Médecin - Psychiatrie",
-    "psychiatres": "Médecin - Psychiatrie",
-    "hepato gastro enterologie": "Médecin - Hépato-gastro-entérologie",
-    "hepato gastro enterologue": "Médecin - Hépato-gastro-entérologie",
-    "hepato gastro enterologues": "Médecin - Hépato-gastro-entérologie",
-    "geriatrie": "Médecin - Gériatrie",
-    "geriatrie gerontologie": "Médecin - Gériatrie / Gérontologie",
-    "geriatre": "Médecin - Gériatrie",
-    "geriatres": "Médecin - Gériatrie",
-    "maladies infectieuses et tropicales": "Médecin - Maladies infectieuses et tropicales",
-    "medecine d'urgence": "Médecin - Médecine d'urgence",
-    "medecine d urgence": "Médecin - Médecine d'urgence",
-    "medecine physique et de readaptation": "Médecin - Médecine physique et de réadaptation",
-    "medecine vasculaire": "Médecin - Médecine vasculaire",
-    "neurologie": "Médecin - Neurologie",
-    "nephrologie": "Médecin - Néphrologie",
-    "pneumologie": "Médecin - Pneumologie",
-    "radiologie et imagerie medicale": "Médecin - Radiologie et imagerie médicale",
-    "rhumatologie": "Médecin - Rhumatologie"
-  };
-
-  return map[normalized] || "";
-}
-
-function getProfessionFamiliesForCard(publics) {
-  return [...new Set(
-    (publics || [])
-      .map(getPublicFamily)
-      .filter(Boolean)
-  )];
-}
-
-function getMedicalSpecialtiesForCard(publics) {
-  return [...new Set(
-    (publics || [])
-      .map(getMedicalSpecialtyLabel)
-      .filter(Boolean)
-  )];
 }
 
 function getTypeEppHelpContent() {
@@ -414,10 +235,70 @@ function getPublicBadge(publics) {
 
   const cleaned = publics.map(v => cleanNotionText(v)).filter(Boolean);
 
+  const normalizeForMatch = (value) =>
+    value
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[’']/g, "'")
+      .replace(/-/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const medicalBadgeByNormalizedLabel = {
+    "generaliste": "Médecin - Généraliste",
+    "generalistes": "Médecin - Généraliste",
+    "medecine generale": "Médecin - Médecine générale",
+    "cardiologie": "Médecin - Cardiologie",
+    "cardiologue": "Médecin - Cardiologie",
+    "cardiologues": "Médecin - Cardiologie",
+    "medecine cardiovasculaire": "Médecin - Médecine cardiovasculaire",
+    "gynecologie": "Médecin - Gynécologie",
+    "gynecologue": "Médecin - Gynécologie",
+    "gynecologues": "Médecin - Gynécologie",
+    "ophtalmologie": "Médecin - Ophtalmologie",
+    "ophtalmologue": "Médecin - Ophtalmologie",
+    "ophtalmologues": "Médecin - Ophtalmologie",
+    "pediatrie": "Médecin - Pédiatrie",
+    "pediatre": "Médecin - Pédiatrie",
+    "pediatres": "Médecin - Pédiatrie",
+    "dermatologie et venereologie": "Médecin - Dermatologie et vénéréologie",
+    "dermatologie": "Médecin - Dermatologie",
+    "dermatologue": "Médecin - Dermatologie",
+    "dermatologues": "Médecin - Dermatologie",
+    "anesthesie reanimation": "Médecin - Anesthésie-réanimation",
+    "anesthesiste": "Médecin - Anesthésie-réanimation",
+    "anesthesistes": "Médecin - Anesthésie-réanimation",
+    "immunologie": "Médecin - Immunologie",
+    "immunologue": "Médecin - Immunologie",
+    "immunologues": "Médecin - Immunologie",
+    "medecine interne": "Médecin - Médecine interne",
+    "endocrinologie": "Médecin - Endocrinologie",
+    "endocrinologue": "Médecin - Endocrinologie",
+    "endocrinologues": "Médecin - Endocrinologie",
+    "oncologie": "Médecin - Oncologie",
+    "oncologue": "Médecin - Oncologie",
+    "oncologues": "Médecin - Oncologie",
+    "psychiatrie": "Médecin - Psychiatrie",
+    "psychiatre": "Médecin - Psychiatrie",
+    "psychiatres": "Médecin - Psychiatrie",
+    "hepato gastro enterologie": "Médecin - Hépato-gastro-entérologie",
+    "hepato gastro enterologue": "Médecin - Hépato-gastro-entérologie",
+    "hepato gastro enterologues": "Médecin - Hépato-gastro-entérologie",
+    "geriatrie": "Médecin - Gériatrie",
+    "geriatre": "Médecin - Gériatrie",
+    "geriatres": "Médecin - Gériatrie"
+  };
+
   if (cleaned.length === 1) {
-    const medicalLabel = getMedicalSpecialtyLabel(cleaned[0]);
-    if (medicalLabel) return medicalLabel;
-    return cleaned[0];
+    const raw = cleaned[0];
+    const normalized = normalizeForMatch(raw);
+
+    if (medicalBadgeByNormalizedLabel[normalized]) {
+      return medicalBadgeByNormalizedLabel[normalized];
+    }
+
+    return raw;
   }
 
   const normalized = cleaned.map(normalizeForMatch);
@@ -428,11 +309,21 @@ function getPublicBadge(publics) {
     return expected.every(value => normalized.includes(value));
   };
 
-  if (hasOnlyValues(["Gynécologie médicale", "Gynécologie obstétrique"])) {
+  if (
+    hasOnlyValues([
+      "Gynécologie médicale",
+      "Gynécologie obstétrique"
+    ])
+  ) {
     return "Médecin - Gynécologie";
   }
 
-  if (hasOnlyValues(["Pharmacien titulaire d'officine", "Pharmacien adjoint d'officine"])) {
+  if (
+    hasOnlyValues([
+      "Pharmacien titulaire d'officine",
+      "Pharmacien adjoint d'officine"
+    ])
+  ) {
     return "Pharmacien";
   }
 
@@ -449,31 +340,44 @@ function getPublicBadgeClass(label) {
     .replace(/\s+/g, " ")
     .trim();
 
-  if (normalized === "public mixte") return "badge-public-mixte";
-  if (normalized === "chirurgie dentaire (omnipraticiens)") return "badge-public-dentaire";
+  if (normalized === "public mixte") {
+    return "badge-public-mixte";
+  }
+
+  if (normalized === "chirurgie dentaire (omnipraticiens)") {
+    return "badge-public-dentaire";
+  }
 
   if (
     normalized === "infirmier diplome d'etat (ide)" ||
     normalized === "infirmier diplome d'etat ide"
-  ) return "badge-public-ide";
+  ) {
+    return "badge-public-ide";
+  }
 
   if (
     normalized === "masseur kinesitherapeute" ||
     normalized === "masseurs kinesitherapeutes"
-  ) return "badge-public-kine";
+  ) {
+    return "badge-public-kine";
+  }
 
   if (
     normalized === "pharmacien" ||
     normalized === "pharmacien titulaire d'officine" ||
     normalized === "pharmacien adjoint d'officine"
-  ) return "badge-public-pharmacien";
+  ) {
+    return "badge-public-pharmacien";
+  }
 
   if (
     normalized === "sage femme" ||
     normalized === "sage-femme" ||
     normalized === "sages-femmes" ||
     normalized === "sages femmes"
-  ) return "badge-public-sagefemme";
+  ) {
+    return "badge-public-sagefemme";
+  }
 
   return "badge-public-default";
 }
@@ -497,6 +401,7 @@ function createInfoBlock(label, value, options = {}) {
         <div class="info-icon" aria-hidden="true">
           ${getInfoIcon(label)}
         </div>
+
         <div class="info-content">
           <div class="info-label-row">
             <span class="info-label">${escapeHtml(label)}</span>
@@ -845,49 +750,11 @@ function setSubtitle(exportDate, lastModifiedDate) {
   subtitle.textContent = "Catalogue mis à jour à partir d’un export Notion";
 }
 
-function updateSpecialtyFilterOptions() {
-  const familySelect = document.getElementById("filter-public-family");
-  const specialtyGroup = document.getElementById("specialty-filter-group");
-  const specialtySelect = document.getElementById("filter-specialty");
-  const specialtyHelper = document.getElementById("specialty-helper");
-
-  if (familySelect.value !== "medecins") {
-    specialtySelect.disabled = true;
-    specialtySelect.innerHTML = `<option value="">Sélectionner “Médecins” d’abord</option>`;
-    specialtySelect.value = "";
-    specialtyHelper.textContent = "Disponible pour le public Médecins.";
-    return;
-  }
-
-  const specialties = [...new Set(
-    catalogue.flatMap(item => {
-      const publics = splitMultiValue(getField(item, ["Public concerné", "Public Concerné"]));
-      return getMedicalSpecialtiesForCard(publics);
-    })
-  )].sort((a, b) => a.localeCompare(b, "fr"));
-
-  specialtySelect.disabled = false;
-  specialtySelect.innerHTML = `<option value="">Toutes</option>`;
-
-  specialties.forEach(value => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = value.replace(/^Médecin\s-\s/, "");
-    specialtySelect.appendChild(option);
-  });
-
-  specialtyHelper.textContent = "Affiché car le public “Médecins” est sélectionné.";
-}
-
-function createResultsCountText(count) {
-  return `${count} formation${count > 1 ? "s" : ""} affichée${count > 1 ? "s" : ""}`;
-}
-
 function renderCards(data) {
   const results = document.getElementById("results");
   const resultsCount = document.getElementById("results-count");
 
-  resultsCount.textContent = createResultsCountText(data.length);
+  resultsCount.textContent = `${data.length} formation${data.length > 1 ? "s" : ""} affichée${data.length > 1 ? "s" : ""}`;
 
   if (!data.length) {
     results.innerHTML = `
@@ -1035,9 +902,8 @@ function renderCards(data) {
 
 function applyFilters() {
   const searchValue = normalize(document.getElementById("search").value).toLowerCase();
-  const familyValue = normalize(document.getElementById("filter-public-family").value);
-  const specialtyValue = normalize(document.getElementById("filter-specialty").value);
   const formatValue = normalize(document.getElementById("filter-format").value);
+  const publicValue = normalize(document.getElementById("filter-public").value);
   const typologieValue = normalize(document.getElementById("filter-typologie").value);
 
   const filtered = catalogue.filter(item => {
@@ -1058,12 +924,11 @@ function applyFilters() {
       "Numero"
     ])).toLowerCase();
 
-    const publics = splitMultiValue(getField(item, [
+    const publicConcerne = splitMultiValue(getField(item, [
       "Public concerné",
       "Public Concerné"
     ]));
 
-    const publicLabels = publics.map(v => v.toLowerCase());
     const formatDisplay = formatLabel(getField(item, [
       "Format (ANDPC)",
       "Format ANDPC"
@@ -1077,104 +942,50 @@ function applyFilters() {
       "Contexte"
     ])).toLowerCase();
 
-    const families = getProfessionFamiliesForCard(publics);
-    const medicalSpecialties = getMedicalSpecialtiesForCard(publics);
-
     const matchesSearch =
       !searchValue ||
       title.includes(searchValue) ||
       numeroDepot.includes(searchValue) ||
-      publicLabels.join(", ").includes(searchValue) ||
+      publicConcerne.join(", ").toLowerCase().includes(searchValue) ||
       contexte.includes(searchValue);
 
-    const matchesFamily =
-      !familyValue ||
-      families.includes(familyValue);
-
-    const matchesSpecialty =
-      familyValue !== "medecins" ||
-      !specialtyValue ||
-      medicalSpecialties.includes(specialtyValue);
-
     const matchesFormat = !formatValue || formatDisplay === formatValue;
+    const matchesPublic = !publicValue || publicConcerne.includes(publicValue);
     const matchesTypologie = !typologieValue || typologieDisplay === typologieValue;
 
-    return (
-      matchesSearch &&
-      matchesFamily &&
-      matchesSpecialty &&
-      matchesFormat &&
-      matchesTypologie
-    );
+    return matchesSearch && matchesFormat && matchesPublic && matchesTypologie;
   });
 
   renderCards(filtered);
 }
 
-function resetFilters() {
-  document.getElementById("search").value = "";
-  document.getElementById("filter-public-family").value = "";
-  document.getElementById("filter-format").value = "";
-  document.getElementById("filter-typologie").value = "";
-  updateSpecialtyFilterOptions();
-  applyFilters();
-}
-
 function initFilters(data) {
   const formatSelect = document.getElementById("filter-format");
+  const publicSelect = document.getElementById("filter-public");
   const typologieSelect = document.getElementById("filter-typologie");
-  const familySelect = document.getElementById("filter-public-family");
-  const specialtySelect = document.getElementById("filter-specialty");
-  const resetButton = document.getElementById("reset-filters");
 
   const formats = [...new Set(
     data.map(item => formatLabel(getField(item, ["Format (ANDPC)", "Format ANDPC"]))).filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, "fr"));
+
+  const publics = [...new Set(
+    data.flatMap(item =>
+      splitMultiValue(getField(item, ["Public concerné", "Public Concerné"]))
+    ).filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, "fr"));
 
   const typologies = [...new Set(
     data.map(item => formatLabel(getField(item, ["Typologie de formation"]))).filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, "fr"));
 
-  formatSelect.innerHTML = `<option value="">Tous</option>`;
-  formats.forEach(value => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = value;
-    formatSelect.appendChild(option);
-  });
-
-  typologieSelect.innerHTML = `<option value="">Toutes</option>`;
-  typologies.forEach(value => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = value;
-    typologieSelect.appendChild(option);
-  });
-
-  specialtySelect.innerHTML = `<option value="">Sélectionner “Médecins” d’abord</option>`;
-  specialtySelect.disabled = true;
+  fillSelect(formatSelect, formats);
+  fillSelect(publicSelect, publics);
+  fillSelect(typologieSelect, typologies);
 
   document.getElementById("search").addEventListener("input", applyFilters);
-
-  familySelect.addEventListener("change", () => {
-    updateSpecialtyFilterOptions();
-    applyFilters();
-  });
-
-  specialtySelect.addEventListener("change", applyFilters);
   formatSelect.addEventListener("change", applyFilters);
+  publicSelect.addEventListener("change", applyFilters);
   typologieSelect.addEventListener("change", applyFilters);
-  resetButton.addEventListener("click", resetFilters);
-}
-
-function loadSubtitleDates(response, rawData) {
-  const lastModifiedHeader = response.headers.get("last-modified");
-  const lastModifiedDate = lastModifiedHeader ? new Date(lastModifiedHeader) : null;
-  const usableLastModifiedDate =
-    lastModifiedDate && !Number.isNaN(lastModifiedDate.getTime()) ? lastModifiedDate : null;
-
-  const exportDate = findExportDateInData(rawData);
-  setSubtitle(exportDate, usableLastModifiedDate);
 }
 
 async function loadCatalogue() {
@@ -1186,13 +997,20 @@ async function loadCatalogue() {
 
     const csvText = await response.text();
 
+    const lastModifiedHeader = response.headers.get("last-modified");
+    const lastModifiedDate = lastModifiedHeader ? new Date(lastModifiedHeader) : null;
+    const usableLastModifiedDate =
+      lastModifiedDate && !Number.isNaN(lastModifiedDate.getTime()) ? lastModifiedDate : null;
+
     const parsed = Papa.parse(csvText, {
       header: true,
       skipEmptyLines: true
     });
 
     const rawData = parsed.data || [];
-    loadSubtitleDates(response, rawData);
+    const exportDate = findExportDateInData(rawData);
+
+    setSubtitle(exportDate, usableLastModifiedDate);
 
     catalogue = rawData.filter(item => {
       const commercialisation = cleanNotionText(getField(item, ["Commercialisation"]));
@@ -1200,7 +1018,6 @@ async function loadCatalogue() {
     });
 
     initFilters(catalogue);
-    updateSpecialtyFilterOptions();
     renderCards(catalogue);
   } catch (error) {
     console.error(error);
