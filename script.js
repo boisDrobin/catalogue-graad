@@ -135,6 +135,7 @@ function getPublicFamily(rawPublic) {
   const normalized = normalizeForMatch(rawPublic);
 
   const medecinsKeywords = [
+    "allergologie",
     "generaliste",
     "generalistes",
     "medecine generale",
@@ -164,7 +165,9 @@ function getPublicFamily(rawPublic) {
     "immunologue",
     "immunologues",
     "medecine interne",
+    "medecine interne et immunologie clinique",
     "endocrinologie",
+    "endocrinologie diabetologie nutrition",
     "endocrinologue",
     "endocrinologues",
     "oncologie",
@@ -177,30 +180,46 @@ function getPublicFamily(rawPublic) {
     "hepato gastro enterologue",
     "hepato gastro enterologues",
     "geriatrie",
+    "geriatrie gerontologie",
     "geriatre",
-    "geriatres"
+    "geriatres",
+    "maladies infectieuses et tropicales",
+    "medecine d'urgence",
+    "medecine d urgence",
+    "medecine physique et de readaptation",
+    "medecine vasculaire",
+    "neurologie",
+    "nephrologie",
+    "pneumologie",
+    "radiologie et imagerie medicale",
+    "rhumatologie"
   ];
 
-  if (medecinsKeywords.some(keyword => normalized === keyword)) return "medecins";
+  if (medecinsKeywords.includes(normalized)) return "medecins";
+
   if (
     normalized === "infirmier diplome d'etat (ide)" ||
     normalized === "infirmier diplome d'etat ide"
   ) return "infirmiers";
+
   if (
     normalized === "pharmacien" ||
     normalized === "pharmacien titulaire d'officine" ||
     normalized === "pharmacien adjoint d'officine"
   ) return "pharmaciens";
+
   if (
     normalized === "sage femme" ||
     normalized === "sage-femme" ||
     normalized === "sages-femmes" ||
     normalized === "sages femmes"
   ) return "sages-femmes";
+
   if (
     normalized === "masseur kinesitherapeute" ||
     normalized === "masseurs kinesitherapeutes"
   ) return "kines";
+
   if (normalized === "chirurgie dentaire (omnipraticiens)") return "dentistes";
 
   return "";
@@ -210,6 +229,7 @@ function getMedicalSpecialtyLabel(rawPublic) {
   const normalized = normalizeForMatch(rawPublic);
 
   const map = {
+    "allergologie": "Médecin - Allergologie",
     "generaliste": "Médecin - Généraliste",
     "generalistes": "Médecin - Généraliste",
     "medecine generale": "Médecin - Médecine générale",
@@ -239,7 +259,9 @@ function getMedicalSpecialtyLabel(rawPublic) {
     "immunologue": "Médecin - Immunologie",
     "immunologues": "Médecin - Immunologie",
     "medecine interne": "Médecin - Médecine interne",
+    "medecine interne et immunologie clinique": "Médecin - Médecine interne et immunologie clinique",
     "endocrinologie": "Médecin - Endocrinologie",
+    "endocrinologie diabetologie nutrition": "Médecin - Endocrinologie-diabétologie-nutrition",
     "endocrinologue": "Médecin - Endocrinologie",
     "endocrinologues": "Médecin - Endocrinologie",
     "oncologie": "Médecin - Oncologie",
@@ -252,8 +274,19 @@ function getMedicalSpecialtyLabel(rawPublic) {
     "hepato gastro enterologue": "Médecin - Hépato-gastro-entérologie",
     "hepato gastro enterologues": "Médecin - Hépato-gastro-entérologie",
     "geriatrie": "Médecin - Gériatrie",
+    "geriatrie gerontologie": "Médecin - Gériatrie / Gérontologie",
     "geriatre": "Médecin - Gériatrie",
-    "geriatres": "Médecin - Gériatrie"
+    "geriatres": "Médecin - Gériatrie",
+    "maladies infectieuses et tropicales": "Médecin - Maladies infectieuses et tropicales",
+    "medecine d'urgence": "Médecin - Médecine d'urgence",
+    "medecine d urgence": "Médecin - Médecine d'urgence",
+    "medecine physique et de readaptation": "Médecin - Médecine physique et de réadaptation",
+    "medecine vasculaire": "Médecin - Médecine vasculaire",
+    "neurologie": "Médecin - Neurologie",
+    "nephrologie": "Médecin - Néphrologie",
+    "pneumologie": "Médecin - Pneumologie",
+    "radiologie et imagerie medicale": "Médecin - Radiologie et imagerie médicale",
+    "rhumatologie": "Médecin - Rhumatologie"
   };
 
   return map[normalized] || "";
@@ -273,107 +306,6 @@ function getMedicalSpecialtiesForCard(publics) {
       .map(getMedicalSpecialtyLabel)
       .filter(Boolean)
   )];
-}
-
-function getTypeEppHelpContent() {
-  return `
-    <div class="info-popover-title">Type d’EPP</div>
-    <p><strong>Audit clinique</strong> : démarche qui compare les pratiques à des références pour identifier des pistes d’amélioration.</p>
-    <p><strong>Vignette clinique</strong> : cas pratique permettant d’analyser le raisonnement et les choix professionnels.</p>
-  `;
-}
-
-function getTypologieHelpContent() {
-  return `
-    <div class="info-popover-title">Typologie</div>
-    <p><strong>Formation continue</strong> : temps de formation destiné à actualiser ou renforcer les connaissances et compétences.</p>
-    <p><strong>Évaluation des pratiques professionnelles</strong> : démarche qui permet d’analyser sa pratique pour l’améliorer.</p>
-    <p><strong>Programme intégré</strong> : formation qui combine un temps de formation continue et un temps d’évaluation des pratiques professionnelles.</p>
-  `;
-}
-
-function getInfoIcon(label) {
-  const icons = {
-    "Numéro de dépôt": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 7h11"></path>
-        <path d="M9 12h11"></path>
-        <path d="M9 17h11"></path>
-        <path d="M4 7h.01"></path>
-        <path d="M4 12h.01"></path>
-        <path d="M4 17h.01"></path>
-      </svg>
-    `,
-    "Public concerné": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-    `,
-    "Format": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="14" rx="2"></rect>
-        <path d="M8 20h8"></path>
-        <path d="M12 18v2"></path>
-      </svg>
-    `,
-    "Typologie": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 6h16"></path>
-        <path d="M4 12h10"></path>
-        <path d="M4 18h7"></path>
-      </svg>
-    `,
-    "Type d’EPP": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 20h9"></path>
-        <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"></path>
-      </svg>
-    `,
-    "Durée totale": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"></circle>
-        <path d="M12 7v5l3 3"></path>
-      </svg>
-    `,
-    "ODPC": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4Z"></path>
-      </svg>
-    `,
-    "Formateur(s)": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 10v6"></path>
-        <path d="M2 10v6"></path>
-        <path d="M12 3 2 8l10 5 10-5-10-5Z"></path>
-        <path d="M6 10.8V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.2"></path>
-      </svg>
-    `,
-    "Prise en charge": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 1v22"></path>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H15a3.5 3.5 0 0 1 0 7H6"></path>
-      </svg>
-    `,
-    "Indemnités PS": `
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-        <circle cx="12" cy="12" r="2.5"></circle>
-        <path d="M6 12h.01"></path>
-        <path d="M18 12h.01"></path>
-      </svg>
-    `
-  };
-
-  return icons[label] || `
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="9"></circle>
-      <path d="M12 8h.01"></path>
-      <path d="M11 12h1v4h1"></path>
-    </svg>
-  `;
 }
 
 function getPublicBadge(publics) {
