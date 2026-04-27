@@ -1,5 +1,5 @@
 let catalogue = [];
-let activePublicFamily = "";
+let activePublicFamily = "medecins";
 
 function normalize(value) {
   return String(value || "").trim();
