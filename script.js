@@ -232,9 +232,89 @@ function getPublicBadge(publics) {
     .map(v => cleanNotionText(v))
     .filter(Boolean);
 
+  const normalizeForMatch = (value) =>
+    value
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[’']/g, "'")
+      .replace(/-/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
   if (cleaned.length === 1) {
-    return cleaned[0];
+    const raw = cleaned[0];
+    const normalized = normalizeForMatch(raw);
+
+    const medecinMap = {
+      "generaliste": "Médecin - Généraliste",
+      "generalistes": "Médecin - Généraliste",
+      "cardiologue": "Médecin - Cardiologie",
+      "cardiologues": "Médecin - Cardiologie",
+      "gynecologue": "Médecin - Gynécologie",
+      "gynecologues": "Médecin - Gynécologie",
+      "gynecologie": "Médecin - Gynécologie",
+      "ophtalmologue": "Médecin - Ophtalmologie",
+      "ophtalmologues": "Médecin - Ophtalmologie",
+      "pediatre": "Médecin - Pédiatrie",
+      "pediatres": "Médecin - Pédiatrie",
+      "dermatologue": "Médecin - Dermatologie",
+      "dermatologues": "Médecin - Dermatologie",
+      "anesthesiste": "Médecin - Anesthésie",
+      "anesthesistes": "Médecin - Anesthésie",
+      "immunologue": "Médecin - Immunologie",
+      "immunologues": "Médecin - Immunologie",
+      "medecine interne": "Médecin - Médecine interne",
+      "endocrinologue": "Médecin - Endocrinologie",
+      "endocrinologues": "Médecin - Endocrinologie",
+      "oncologue": "Médecin - Oncologie",
+      "oncologues": "Médecin - Oncologie",
+      "psychiatre": "Médecin - Psychiatrie",
+      "psychiatres": "Médecin - Psychiatrie",
+      "psychiatrie": "Médecin - Psychiatrie",
+      "hepato gastro enterologue": "Médecin - Hépato-gastro-entérologie",
+      "hepato gastro enterologues": "Médecin - Hépato-gastro-entérologie",
+      "geriatre": "Médecin - Gériatrie",
+      "geriatres": "Médecin - Gériatrie"
+    };
+
+    if (medecinMap[normalized]) {
+      return medecinMap[normalized];
+    }
+
+    return raw;
   }
+
+  const normalized = cleaned.map(normalizeForMatch);
+
+  const hasOnlyValues = (expectedValues) => {
+    const expected = expectedValues.map(normalizeForMatch);
+
+    if (normalized.length !== expected.length) return false;
+
+    return expected.every(value => normalized.includes(value));
+  };
+
+  if (
+    hasOnlyValues([
+      "Gynécologie médicale",
+      "Gynécologie obstétrique"
+    ])
+  ) {
+    return "Médecin - Gynécologie";
+  }
+
+  if (
+    hasOnlyValues([
+      "Pharmacien titulaire d'officine",
+      "Pharmacien adjoint d'officine"
+    ])
+  ) {
+    return "Pharmacien";
+  }
+
+  return "Public Mixte";
+}
 
   const normalized = cleaned.map(v =>
     v
@@ -327,11 +407,14 @@ function getPublicBadgeClass(label) {
 
   if (
     normalized === "sage femme" ||
-    normalized === "sage-femme" ||
-    normalized === "sages-femmes" ||
+    normalized === "sage femme" ||
     normalized === "sages femmes"
   ) {
     return "badge-public-sagefemme";
+  }
+
+  if (normalized.startsWith("medecin ")) {
+    return "badge-public-default";
   }
 
   return "badge-public-default";
