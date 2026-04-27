@@ -226,73 +226,89 @@ function getInfoIcon(label) {
 }
 
 function getProfessionBadge(publics) {
-  const values = (publics || []).map(v => cleanNotionText(v).toLowerCase());
+  const normalizeForMatch = (value) =>
+    cleanNotionText(value)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[’']/g, "'")
+      .replace(/-/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const values = (publics || []).map(normalizeForMatch);
 
   const includesAny = (keywords) =>
     values.some(value => keywords.some(keyword => value.includes(keyword)));
 
   const medecinsKeywords = [
-    "généraliste",
     "generaliste",
+    "generalistes",
     "cardiologue",
-    "gynécologue",
+    "cardiologues",
     "gynecologue",
+    "gynecologues",
     "ophtalmologue",
-    "pédiatre",
+    "ophtalmologues",
     "pediatre",
+    "pediatres",
     "dermatologue",
-    "anesthésiste",
+    "dermatologues",
     "anesthesiste",
+    "anesthesistes",
     "immunologue",
-    "médecine interne",
+    "immunologues",
     "medecine interne",
     "endocrinologue",
+    "endocrinologues",
     "oncologue",
+    "oncologues",
     "psychiatre",
-    "hépato gastro-entérologue",
-    "hepato gastro-enterologue",
-    "gériatre",
-    "geriatre"
+    "psychiatres",
+    "hepato gastro enterologue",
+    "hepato gastro enterologues",
+    "geriatre",
+    "geriatres"
   ];
 
   const infirmiersKeywords = [
     "infirmier",
-    "infirmière",
+    "infirmiers",
     "infirmiere",
+    "infirmieres",
     "ide",
     "ipa",
     "iade",
     "ibode",
-    "puéricultrice",
-    "puericultrice"
+    "puericultrice",
+    "puericultrices"
   ];
 
   const pharmaciensKeywords = [
     "pharmacien",
-    "pharmacienne"
+    "pharmaciens",
+    "pharmacienne",
+    "pharmaciennes"
   ];
 
   const sagesFemmesKeywords = [
+    "sage femme",
+    "sage femmes",
     "sage-femme",
     "sages-femmes",
-    "sage femme",
     "sages femmes"
   ];
 
   const kinesKeywords = [
-    "masseurs-kinésithérapeutes",
-    "masseur-kinésithérapeute",
-    "masseurs-kinesitherapeutes",
-    "masseur-kinesitherapeute",
-    "kinésithérapeute",
+    "masseur kinesitherapeute",
+    "masseurs kinesitherapeutes",
     "kinesitherapeute",
-    "kiné",
-    "kine"
+    "kinesitherapeutes",
+    "kine",
+    "kines"
   ];
 
   const dentistesKeywords = [
-    "chirurgien-dentiste",
-    "chirurgiens-dentistes",
     "chirurgien dentiste",
     "chirurgiens dentistes",
     "dentiste",
