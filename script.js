@@ -225,6 +225,109 @@ function getInfoIcon(label) {
   `;
 }
 
+function getProfessionBadge(publics) {
+  const values = (publics || []).map(v => cleanNotionText(v).toLowerCase());
+
+  const includesAny = (keywords) =>
+    values.some(value => keywords.some(keyword => value.includes(keyword)));
+
+  const medecinsKeywords = [
+    "généraliste",
+    "generaliste",
+    "cardiologue",
+    "gynécologue",
+    "gynecologue",
+    "ophtalmologue",
+    "pédiatre",
+    "pediatre",
+    "dermatologue",
+    "anesthésiste",
+    "anesthesiste",
+    "immunologue",
+    "médecine interne",
+    "medecine interne",
+    "endocrinologue",
+    "oncologue",
+    "psychiatre",
+    "hépato gastro-entérologue",
+    "hepato gastro-enterologue",
+    "gériatre",
+    "geriatre"
+  ];
+
+  const infirmiersKeywords = [
+    "infirmier",
+    "infirmière",
+    "infirmiere",
+    "ide",
+    "ipa",
+    "iade",
+    "ibode",
+    "puéricultrice",
+    "puericultrice"
+  ];
+
+  const pharmaciensKeywords = [
+    "pharmacien",
+    "pharmacienne"
+  ];
+
+  const sagesFemmesKeywords = [
+    "sage-femme",
+    "sages-femmes",
+    "sage femme",
+    "sages femmes"
+  ];
+
+  const kinesKeywords = [
+    "masseurs-kinésithérapeutes",
+    "masseur-kinésithérapeute",
+    "masseurs-kinesitherapeutes",
+    "masseur-kinesitherapeute",
+    "kinésithérapeute",
+    "kinesitherapeute",
+    "kiné",
+    "kine"
+  ];
+
+  const dentistesKeywords = [
+    "chirurgien-dentiste",
+    "chirurgiens-dentistes",
+    "chirurgien dentiste",
+    "chirurgiens dentistes",
+    "dentiste",
+    "dentistes"
+  ];
+
+  const familiesFound = [];
+
+  if (includesAny(medecinsKeywords)) familiesFound.push("Médecins");
+  if (includesAny(infirmiersKeywords)) familiesFound.push("Infirmiers");
+  if (includesAny(pharmaciensKeywords)) familiesFound.push("Pharmaciens");
+  if (includesAny(sagesFemmesKeywords)) familiesFound.push("Sages-femmes");
+  if (includesAny(kinesKeywords)) familiesFound.push("Kinésithérapeutes");
+  if (includesAny(dentistesKeywords)) familiesFound.push("Dentistes");
+
+  if (familiesFound.length === 1) return familiesFound[0];
+  if (familiesFound.length > 1) return "Multi-professions";
+
+  return "";
+}
+
+function getProfessionBadgeClass(label) {
+  const map = {
+    "Médecins": "badge-profession-medecins",
+    "Infirmiers": "badge-profession-infirmiers",
+    "Pharmaciens": "badge-profession-pharmaciens",
+    "Sages-femmes": "badge-profession-sagesfemmes",
+    "Kinésithérapeutes": "badge-profession-kines",
+    "Dentistes": "badge-profession-dentistes",
+    "Multi-professions": "badge-profession-multi"
+  };
+
+  return map[label] || "badge-profession-default";
+}
+
 function createInfoBlock(label, value, options = {}) {
   const helpType = options.helpType || "";
   const isHtmlValue = options.isHtmlValue || false;
@@ -471,13 +574,23 @@ function bindCardToggles() {
 
       const isOpen = card.classList.contains("is-open");
       const toggleText = card.querySelector(".card-toggle-text");
+      const ariaExpanded = card.querySelector(".card-header");
 
       if (isOpen) {
         card.classList.remove("is-open");
         if (toggleText) toggleText.textContent = "Voir le détail";
+        if (ariaExpanded) ariaExpanded.setAttribute("aria-expanded", "false");
       } else {
         card.classList.add("is-open");
         if (toggleText) toggleText.textContent = "Masquer le détail";
+        if (ariaExpanded) ariaExpanded.setAttribute("aria-expanded", "true");
+      }
+    };
+
+    header.onkeydown = (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        header.click();
       }
     };
   });
@@ -663,10 +776,6 @@ function renderCards(data) {
       "ODPC"
     ]));
 
-    const commercialisation = cleanNotionText(getField(item, [
-      "Commercialisation"
-    ]));
-
     const memoPdf = cleanNotionText(getField(item, [
       "Fiche mémo pdf",
       "Fiche mémo PDF",
@@ -680,15 +789,20 @@ function renderCards(data) {
     const formatClass = getFormatClass(formatDisplay);
     const showFormateurs = shouldShowFormateurs(formatDisplay);
 
+    const professionBadge = getProfessionBadge(publicConcerne);
+    const professionBadgeClass = getProfessionBadgeClass(professionBadge);
+
     return `
       <article class="card ${formatClass}">
         <div class="card-header" role="button" tabindex="0" aria-expanded="false">
           <div class="card-header-main">
             <h2 class="card-title">${escapeHtml(title || "Sans titre")}</h2>
             <div class="card-badges">
-              <span class="badge badge-commercialisation">
-                ${escapeHtml(commercialisation || "Commercialisée")}
-              </span>
+              ${professionBadge ? `
+                <span class="badge ${professionBadgeClass}">
+                  ${escapeHtml(professionBadge)}
+                </span>
+              ` : ""}
               ${formatDisplay ? `
                 <span class="badge badge-format ${formatClass.replace("format-", "badge-format-")}">
                   ${escapeHtml(formatDisplay)}
