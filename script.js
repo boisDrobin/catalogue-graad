@@ -427,7 +427,9 @@ function bindContentToggles() {
   const buttons = document.querySelectorAll(".content-toggle");
 
   buttons.forEach(button => {
-    button.onclick = () => {
+    button.onclick = (event) => {
+      event.stopPropagation();
+
       const targetId = button.getAttribute("data-target");
       const target = document.getElementById(targetId);
       if (!target) return;
@@ -451,6 +453,31 @@ function bindContentToggles() {
         target.hidden = !isHidden;
         button.textContent = isHidden ? lessLabel : moreLabel;
         button.setAttribute("aria-expanded", isHidden ? "true" : "false");
+      }
+    };
+  });
+}
+
+function bindCardToggles() {
+  const headers = document.querySelectorAll(".card-header");
+
+  headers.forEach(header => {
+    header.onclick = (event) => {
+      const interactiveTarget = event.target.closest("button, a");
+      if (interactiveTarget) return;
+
+      const card = header.closest(".card");
+      if (!card) return;
+
+      const isOpen = card.classList.contains("is-open");
+      const toggleText = card.querySelector(".card-toggle-text");
+
+      if (isOpen) {
+        card.classList.remove("is-open");
+        if (toggleText) toggleText.textContent = "Voir le détail";
+      } else {
+        card.classList.add("is-open");
+        if (toggleText) toggleText.textContent = "Masquer le détail";
       }
     };
   });
@@ -655,7 +682,7 @@ function renderCards(data) {
 
     return `
       <article class="card ${formatClass}">
-        <div class="card-header">
+        <div class="card-header" role="button" tabindex="0" aria-expanded="false">
           <div class="card-header-main">
             <h2 class="card-title">${escapeHtml(title || "Sans titre")}</h2>
             <div class="card-badges">
@@ -669,30 +696,40 @@ function renderCards(data) {
               ` : ""}
             </div>
           </div>
+
+          <div class="card-toggle">
+            <span class="card-toggle-text">Voir le détail</span>
+            <span class="card-toggle-icon" aria-hidden="true">⌄</span>
+          </div>
         </div>
 
-        <div class="card-grid">
-          ${createInfoBlock("Numéro de dépôt", numeroDepot)}
-          ${createPublicConcerneBlock(publicConcerne, index)}
-          ${createInfoBlock("Format", formatDisplay || "-")}
-          ${createInfoBlock("Typologie", typologieDisplay || "-", { helpType: "typologie" })}
-          ${createInfoBlock("Type d’EPP", typeEppDisplay || "-", { helpType: "type-epp" })}
-          ${createInfoBlock("Durée totale", dureeTotale || "-")}
-          ${createInfoBlock("ODPC", odpc || "-")}
-          ${showFormateurs ? createInfoBlock("Formateur(s)", formateurs || "-") : ""}
-          ${createInfoBlock("Prise en charge", priseEnCharge || "-")}
-          ${createInfoBlock("Indemnités PS", indemnites || "-")}
-        </div>
+        <div class="card-details">
+          <div class="card-details-inner">
+            <div class="card-grid">
+              ${createInfoBlock("Numéro de dépôt", numeroDepot)}
+              ${createPublicConcerneBlock(publicConcerne, index)}
+              ${createInfoBlock("Format", formatDisplay || "-")}
+              ${createInfoBlock("Typologie", typologieDisplay || "-", { helpType: "typologie" })}
+              ${createInfoBlock("Type d’EPP", typeEppDisplay || "-", { helpType: "type-epp" })}
+              ${createInfoBlock("Durée totale", dureeTotale || "-")}
+              ${createInfoBlock("ODPC", odpc || "-")}
+              ${showFormateurs ? createInfoBlock("Formateur(s)", formateurs || "-") : ""}
+              ${createInfoBlock("Prise en charge", priseEnCharge || "-")}
+              ${createInfoBlock("Indemnités PS", indemnites || "-")}
+            </div>
 
-        ${createArticulationBlock(item)}
-        ${createContextBlock(contexte, index)}
-        ${createMemoButton(memoPdf)}
+            ${createArticulationBlock(item)}
+            ${createContextBlock(contexte, index)}
+            ${createMemoButton(memoPdf)}
+          </div>
+        </div>
       </article>
     `;
   }).join("");
 
   bindContentToggles();
   bindInfoPopovers();
+  bindCardToggles();
 }
 
 function applyFilters() {
