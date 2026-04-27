@@ -82,7 +82,12 @@ function getFormatClass(formatValue) {
   if (value.includes("mixte")) return "format-mixte";
   if (value.includes("classe virtuelle")) return "format-classe-virtuelle";
   if (value.includes("présentiel") || value.includes("presentiel")) return "format-presentiel";
-  if (value.includes("e-learning") || value.includes("elearning") || value.includes("non présentiel") || value.includes("non presentiel")) {
+  if (
+    value.includes("e-learning") ||
+    value.includes("elearning") ||
+    value.includes("non présentiel") ||
+    value.includes("non presentiel")
+  ) {
     return "format-elearning";
   }
 
@@ -228,9 +233,7 @@ function getInfoIcon(label) {
 function getPublicBadge(publics) {
   if (!publics || !publics.length) return "";
 
-  const cleaned = publics
-    .map(v => cleanNotionText(v))
-    .filter(Boolean);
+  const cleaned = publics.map(v => cleanNotionText(v)).filter(Boolean);
 
   const normalizeForMatch = (value) =>
     value
@@ -289,9 +292,7 @@ function getPublicBadge(publics) {
 
   const hasOnlyValues = (expectedValues) => {
     const expected = expectedValues.map(normalizeForMatch);
-
     if (normalized.length !== expected.length) return false;
-
     return expected.every(value => normalized.includes(value));
   };
 
@@ -302,55 +303,6 @@ function getPublicBadge(publics) {
     ])
   ) {
     return "Médecin - Gynécologie";
-  }
-
-  if (
-    hasOnlyValues([
-      "Pharmacien titulaire d'officine",
-      "Pharmacien adjoint d'officine"
-    ])
-  ) {
-    return "Pharmacien";
-  }
-
-  return "Public Mixte";
-}
-
-  const normalized = cleaned.map(v =>
-    v
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[’']/g, "'")
-      .replace(/-/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-  );
-
-  const hasOnlyValues = (expectedValues) => {
-    const expected = expectedValues.map(v =>
-      v
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[’']/g, "'")
-        .replace(/-/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-    );
-
-    if (normalized.length !== expected.length) return false;
-
-    return expected.every(value => normalized.includes(value));
-  };
-
-  if (
-    hasOnlyValues([
-      "Gynécologie médicale",
-      "Gynécologie obstétrique"
-    ])
-  ) {
-    return "Gynécologie";
   }
 
   if (
@@ -407,14 +359,11 @@ function getPublicBadgeClass(label) {
 
   if (
     normalized === "sage femme" ||
-    normalized === "sage femme" ||
+    normalized === "sage-femme" ||
+    normalized === "sages-femmes" ||
     normalized === "sages femmes"
   ) {
     return "badge-public-sagefemme";
-  }
-
-  if (normalized.startsWith("medecin ")) {
-    return "badge-public-default";
   }
 
   return "badge-public-default";
