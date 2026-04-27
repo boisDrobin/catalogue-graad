@@ -856,13 +856,11 @@ function syncPublicButtons() {
 
 function updateSpecialtyFilterOptions() {
   const specialtySelect = document.getElementById("filter-specialty");
-  const specialtyHelper = document.getElementById("specialty-helper");
 
   if (activePublicFamily !== "medecins") {
     specialtySelect.disabled = true;
-    specialtySelect.innerHTML = `<option value="">Sélectionner “Médecins” d’abord</option>`;
+    specialtySelect.innerHTML = `<option value="">Aucune</option>`;
     specialtySelect.value = "";
-    specialtyHelper.textContent = "Disponible pour le public Médecins.";
     return;
   }
 
@@ -882,8 +880,6 @@ function updateSpecialtyFilterOptions() {
     option.textContent = value.replace(/^Médecin\s-\s/, "");
     specialtySelect.appendChild(option);
   });
-
-  specialtyHelper.textContent = "Affiché car le public “Médecins” est sélectionné.";
 }
 
 function createResultsCountText(count) {
@@ -1158,7 +1154,7 @@ function initFilters(data) {
     typologieSelect.appendChild(option);
   });
 
-  specialtySelect.innerHTML = `<option value="">Sélectionner “Médecins” d’abord</option>`;
+  specialtySelect.innerHTML = `<option value="">Aucune</option>`;
   specialtySelect.disabled = true;
 
   document.getElementById("search").addEventListener("input", applyFilters);
