@@ -45,7 +45,7 @@ body {
 }
 
 .site-header {
-  padding: 38px 0 24px;
+  padding: 22px 0 18px;
 }
 
 .container {
@@ -59,29 +59,27 @@ body {
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-areas:
-    "brand . actions"
-    "inner inner inner";
-  row-gap: 18px;
-  column-gap: 24px;
-  align-items: start;
+    "brand inner actions";
+  align-items: center;
+  column-gap: 22px;
   background: rgba(255, 255, 255, 0.76);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(231, 223, 207, 0.98);
   border-radius: 28px;
-  padding: 28px 32px 34px;
+  padding: 18px 24px;
   box-shadow: var(--shadow);
 }
 
 .header-brand {
   grid-area: brand;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
 }
 
 .header-logo {
   display: block;
-  width: 180px;
+  width: 145px;
   max-width: 100%;
   height: auto;
 }
@@ -91,7 +89,7 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -99,12 +97,12 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 7px 12px;
+  padding: 7px 11px;
   border-radius: 999px;
   border: 1px solid #dccfae;
   background: #f7f1e4;
   color: #6f6032;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1;
   text-decoration: none;
@@ -125,25 +123,25 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding-top: 6px;
+  min-width: 0;
 }
 
 .eyebrow {
-  margin: 0 0 14px;
-  font-size: 12px;
+  margin: 0 0 8px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.11em;
   color: var(--accent);
   text-align: center;
 }
 
 h1 {
   margin: 0;
-  max-width: 980px;
+  max-width: 760px;
   width: 100%;
-  font-size: clamp(2.2rem, 4.5vw, 4rem);
-  line-height: 1.08;
+  font-size: clamp(1.8rem, 3.4vw, 3rem);
+  line-height: 1.04;
   font-weight: 700;
   letter-spacing: -0.03em;
   color: #1e1b16;
@@ -152,12 +150,12 @@ h1 {
 }
 
 .subtitle {
-  margin: 16px 0 0;
-  max-width: 980px;
+  margin: 10px 0 0;
+  max-width: 760px;
   width: 100%;
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.75;
+  font-size: 14px;
+  line-height: 1.55;
   font-weight: 400;
   text-align: center;
 }
@@ -168,7 +166,7 @@ h1 {
   display: grid;
   grid-template-columns: 2fr repeat(3, minmax(180px, 1fr));
   gap: 18px;
-  margin: 30px 0 22px;
+  margin: 24px 0 22px;
   padding: 18px;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
