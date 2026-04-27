@@ -245,44 +245,56 @@ function getPublicBadge(publics) {
       .replace(/\s+/g, " ")
       .trim();
 
+  const medicalBadgeByNormalizedLabel = {
+    "generaliste": "Médecin - Généraliste",
+    "generalistes": "Médecin - Généraliste",
+    "cardiologie": "Médecin - Cardiologie",
+    "cardiologue": "Médecin - Cardiologie",
+    "cardiologues": "Médecin - Cardiologie",
+    "medecine cardiovasculaire": "Médecin - Médecine cardiovasculaire",
+    "gynecologie": "Médecin - Gynécologie",
+    "gynecologue": "Médecin - Gynécologie",
+    "gynecologues": "Médecin - Gynécologie",
+    "ophtalmologie": "Médecin - Ophtalmologie",
+    "ophtalmologue": "Médecin - Ophtalmologie",
+    "ophtalmologues": "Médecin - Ophtalmologie",
+    "pediatrie": "Médecin - Pédiatrie",
+    "pediatre": "Médecin - Pédiatrie",
+    "pediatres": "Médecin - Pédiatrie",
+    "dermatologie et venereologie": "Médecin - Dermatologie et vénéréologie",
+    "dermatologie": "Médecin - Dermatologie",
+    "dermatologue": "Médecin - Dermatologie",
+    "dermatologues": "Médecin - Dermatologie",
+    "anesthesie reanimation": "Médecin - Anesthésie-réanimation",
+    "anesthesiste": "Médecin - Anesthésie-réanimation",
+    "anesthesistes": "Médecin - Anesthésie-réanimation",
+    "immunologie": "Médecin - Immunologie",
+    "immunologue": "Médecin - Immunologie",
+    "immunologues": "Médecin - Immunologie",
+    "medecine interne": "Médecin - Médecine interne",
+    "endocrinologie": "Médecin - Endocrinologie",
+    "endocrinologue": "Médecin - Endocrinologie",
+    "endocrinologues": "Médecin - Endocrinologie",
+    "oncologie": "Médecin - Oncologie",
+    "oncologue": "Médecin - Oncologie",
+    "oncologues": "Médecin - Oncologie",
+    "psychiatrie": "Médecin - Psychiatrie",
+    "psychiatre": "Médecin - Psychiatrie",
+    "psychiatres": "Médecin - Psychiatrie",
+    "hepato gastro enterologie": "Médecin - Hépato-gastro-entérologie",
+    "hepato gastro enterologue": "Médecin - Hépato-gastro-entérologie",
+    "hepato gastro enterologues": "Médecin - Hépato-gastro-entérologie",
+    "geriatrie": "Médecin - Gériatrie",
+    "geriatre": "Médecin - Gériatrie",
+    "geriatres": "Médecin - Gériatrie"
+  };
+
   if (cleaned.length === 1) {
     const raw = cleaned[0];
     const normalized = normalizeForMatch(raw);
 
-    const medecinMap = {
-      "generaliste": "Médecin - Généraliste",
-      "generalistes": "Médecin - Généraliste",
-      "cardiologue": "Médecin - Cardiologie",
-      "cardiologues": "Médecin - Cardiologie",
-      "gynecologue": "Médecin - Gynécologie",
-      "gynecologues": "Médecin - Gynécologie",
-      "gynecologie": "Médecin - Gynécologie",
-      "ophtalmologue": "Médecin - Ophtalmologie",
-      "ophtalmologues": "Médecin - Ophtalmologie",
-      "pediatre": "Médecin - Pédiatrie",
-      "pediatres": "Médecin - Pédiatrie",
-      "dermatologue": "Médecin - Dermatologie",
-      "dermatologues": "Médecin - Dermatologie",
-      "anesthesiste": "Médecin - Anesthésie",
-      "anesthesistes": "Médecin - Anesthésie",
-      "immunologue": "Médecin - Immunologie",
-      "immunologues": "Médecin - Immunologie",
-      "medecine interne": "Médecin - Médecine interne",
-      "endocrinologue": "Médecin - Endocrinologie",
-      "endocrinologues": "Médecin - Endocrinologie",
-      "oncologue": "Médecin - Oncologie",
-      "oncologues": "Médecin - Oncologie",
-      "psychiatre": "Médecin - Psychiatrie",
-      "psychiatres": "Médecin - Psychiatrie",
-      "psychiatrie": "Médecin - Psychiatrie",
-      "hepato gastro enterologue": "Médecin - Hépato-gastro-entérologie",
-      "hepato gastro enterologues": "Médecin - Hépato-gastro-entérologie",
-      "geriatre": "Médecin - Gériatrie",
-      "geriatres": "Médecin - Gériatrie"
-    };
-
-    if (medecinMap[normalized]) {
-      return medecinMap[normalized];
+    if (medicalBadgeByNormalizedLabel[normalized]) {
+      return medicalBadgeByNormalizedLabel[normalized];
     }
 
     return raw;
