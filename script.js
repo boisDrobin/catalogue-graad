@@ -286,9 +286,55 @@ function getPublicBadge(publics) {
 }
 
 function getPublicBadgeClass(label) {
-  if (!label) return "badge-profession-default";
-  if (label === "Mixte") return "badge-profession-multi";
-  return "badge-profession-default";
+  const normalized = cleanNotionText(label)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’']/g, "'")
+    .replace(/-/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (normalized === "public mixte") {
+    return "badge-public-mixte";
+  }
+
+  if (normalized === "chirurgie dentaire (omnipraticiens)") {
+    return "badge-public-dentaire";
+  }
+
+  if (
+    normalized === "infirmier diplome d'etat (ide)" ||
+    normalized === "infirmier diplome d'etat ide"
+  ) {
+    return "badge-public-ide";
+  }
+
+  if (
+    normalized === "masseur kinesitherapeute" ||
+    normalized === "masseurs kinesitherapeutes"
+  ) {
+    return "badge-public-kine";
+  }
+
+  if (
+    normalized === "pharmacien" ||
+    normalized === "pharmacien titulaire d'officine" ||
+    normalized === "pharmacien adjoint d'officine"
+  ) {
+    return "badge-public-pharmacien";
+  }
+
+  if (
+    normalized === "sage femme" ||
+    normalized === "sage-femme" ||
+    normalized === "sages-femmes" ||
+    normalized === "sages femmes"
+  ) {
+    return "badge-public-sagefemme";
+  }
+
+  return "badge-public-default";
 }
 
 function createInfoBlock(label, value, options = {}) {
