@@ -225,123 +225,20 @@ function getInfoIcon(label) {
   `;
 }
 
-function getProfessionBadge(publics) {
-  const normalizeForMatch = (value) =>
-    cleanNotionText(value)
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[’']/g, "'")
-      .replace(/-/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
+function getPublicBadge(publics) {
+  if (!publics || !publics.length) return "";
 
-  const values = (publics || []).map(normalizeForMatch);
+  if (publics.length === 1) {
+    return publics[0];
+  }
 
-  const includesAny = (keywords) =>
-    values.some(value => keywords.some(keyword => value.includes(keyword)));
-
-  const medecinsKeywords = [
-    "generaliste",
-    "generalistes",
-    "cardiologue",
-    "cardiologues",
-    "gynecologue",
-    "gynecologues",
-    "ophtalmologue",
-    "ophtalmologues",
-    "pediatre",
-    "pediatres",
-    "dermatologue",
-    "dermatologues",
-    "anesthesiste",
-    "anesthesistes",
-    "immunologue",
-    "immunologues",
-    "medecine interne",
-    "endocrinologue",
-    "endocrinologues",
-    "oncologue",
-    "oncologues",
-    "psychiatre",
-    "psychiatres",
-    "hepato gastro enterologue",
-    "hepato gastro enterologues",
-    "geriatre",
-    "geriatres"
-  ];
-
-  const infirmiersKeywords = [
-    "infirmier",
-    "infirmiers",
-    "infirmiere",
-    "infirmieres",
-    "ide",
-    "ipa",
-    "iade",
-    "ibode",
-    "puericultrice",
-    "puericultrices"
-  ];
-
-  const pharmaciensKeywords = [
-    "pharmacien",
-    "pharmaciens",
-    "pharmacienne",
-    "pharmaciennes"
-  ];
-
-  const sagesFemmesKeywords = [
-    "sage femme",
-    "sage femmes",
-    "sage-femme",
-    "sages-femmes",
-    "sages femmes"
-  ];
-
-  const kinesKeywords = [
-    "masseur kinesitherapeute",
-    "masseurs kinesitherapeutes",
-    "kinesitherapeute",
-    "kinesitherapeutes",
-    "kine",
-    "kines"
-  ];
-
-  const dentistesKeywords = [
-    "chirurgien dentiste",
-    "chirurgiens dentistes",
-    "dentiste",
-    "dentistes"
-  ];
-
-  const familiesFound = [];
-
-  if (includesAny(medecinsKeywords)) familiesFound.push("Médecins");
-  if (includesAny(infirmiersKeywords)) familiesFound.push("Infirmiers");
-  if (includesAny(pharmaciensKeywords)) familiesFound.push("Pharmaciens");
-  if (includesAny(sagesFemmesKeywords)) familiesFound.push("Sages-femmes");
-  if (includesAny(kinesKeywords)) familiesFound.push("Kinésithérapeutes");
-  if (includesAny(dentistesKeywords)) familiesFound.push("Dentistes");
-
-  if (familiesFound.length === 1) return familiesFound[0];
-  if (familiesFound.length > 1) return "Multi-professions";
-
-  return "";
+  return "Mixte";
 }
 
-function getProfessionBadgeClass(label) {
-  const map = {
-    "Médecins": "badge-profession-medecins",
-    "Infirmiers": "badge-profession-infirmiers",
-    "Pharmaciens": "badge-profession-pharmaciens",
-    "Sages-femmes": "badge-profession-sagesfemmes",
-    "Kinésithérapeutes": "badge-profession-kines",
-    "Dentistes": "badge-profession-dentistes",
-    "Multi-professions": "badge-profession-multi"
-  };
-
-  return map[label] || "badge-profession-default";
+function getPublicBadgeClass(label) {
+  if (!label) return "badge-profession-default";
+  if (label === "Mixte") return "badge-profession-multi";
+  return "badge-profession-default";
 }
 
 function createInfoBlock(label, value, options = {}) {
@@ -805,8 +702,8 @@ function renderCards(data) {
     const formatClass = getFormatClass(formatDisplay);
     const showFormateurs = shouldShowFormateurs(formatDisplay);
 
-    const professionBadge = getProfessionBadge(publicConcerne);
-    const professionBadgeClass = getProfessionBadgeClass(professionBadge);
+    const publicBadge = getPublicBadge(publicConcerne);
+    const publicBadgeClass = getPublicBadgeClass(publicBadge);
 
     return `
       <article class="card ${formatClass}">
@@ -814,9 +711,9 @@ function renderCards(data) {
           <div class="card-header-main">
             <h2 class="card-title">${escapeHtml(title || "Sans titre")}</h2>
             <div class="card-badges">
-              ${professionBadge ? `
-                <span class="badge ${professionBadgeClass}">
-                  ${escapeHtml(professionBadge)}
+              ${publicBadge ? `
+                <span class="badge ${publicBadgeClass}">
+                  ${escapeHtml(publicBadge)}
                 </span>
               ` : ""}
               ${formatDisplay ? `
