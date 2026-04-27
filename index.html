@@ -62,20 +62,33 @@
         <input
           type="text"
           id="search"
-          placeholder="Rechercher par titre, numéro, public, contexte..."
+          placeholder="Titre, dépôt, contexte..."
         >
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-public-family">Public</label>
+        <select id="filter-public-family">
+          <option value="">Tous</option>
+          <option value="medecins">Médecins</option>
+          <option value="infirmiers">Infirmiers</option>
+          <option value="pharmaciens">Pharmaciens</option>
+          <option value="sages-femmes">Sages-femmes</option>
+          <option value="kines">Kinésithérapeutes</option>
+          <option value="dentistes">Dentistes</option>
+        </select>
+      </div>
+
+      <div class="filter-group is-hidden" id="specialty-filter-group">
+        <label for="filter-specialty">Spécialité</label>
+        <select id="filter-specialty">
+          <option value="">Toutes</option>
+        </select>
       </div>
 
       <div class="filter-group">
         <label for="filter-format">Format</label>
         <select id="filter-format">
-          <option value="">Tous</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label for="filter-public">Public concerné</label>
-        <select id="filter-public">
           <option value="">Tous</option>
         </select>
       </div>
