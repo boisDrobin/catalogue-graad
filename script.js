@@ -1201,10 +1201,34 @@ async function loadCatalogue() {
     const rawData = parsed.data || [];
     loadSubtitleDates(response, rawData);
 
-    catalogue = rawData.filter(item => {
-      const commercialisation = cleanNotionText(getField(item, ["Commercialisation"]));
-      return commercialisation.toLowerCase().includes("commercialisée");
-    });
+catalogue = rawData
+  .filter(item => {
+    const commercialisation = cleanNotionText(getField(item, ["Commercialisation"]));
+    return commercialisation.toLowerCase().includes("commercialisée");
+  })
+  .sort((a, b) => {
+    const titleA = cleanNotionText(getField(a, [
+      "Thématiques 2628",
+      "Intitulé de l'action",
+      "Intitulé",
+      "Nom",
+      "Name",
+      "Titre",
+      "Title"
+    ]));
+
+    const titleB = cleanNotionText(getField(b, [
+      "Thématiques 2628",
+      "Intitulé de l'action",
+      "Intitulé",
+      "Nom",
+      "Name",
+      "Titre",
+      "Title"
+    ]));
+
+    return titleA.localeCompare(titleB, "fr", { sensitivity: "base" });
+  });
 
 initFilters(catalogue);
 syncPublicButtons();
