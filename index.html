@@ -56,35 +56,73 @@
   </header>
 
   <main class="container">
-    <section class="filters">
-      <div class="filter-group filter-search">
-        <label for="search">Recherche</label>
-        <input
-          type="text"
-          id="search"
-          placeholder="Rechercher par titre, numéro, public, contexte..."
-        >
+    <section class="filters-panel">
+      <div class="public-switcher-wrap">
+        <div class="public-switcher-head">
+          <h2 class="filters-block-title">Choisir un public</h2>
+          <p class="filters-block-text">Sélectionnez un public pour filtrer rapidement le catalogue.</p>
+        </div>
+
+        <div class="public-switcher" role="group" aria-label="Choix du public">
+          <button type="button" class="public-pill is-active" data-public-value="">Tous</button>
+          <button type="button" class="public-pill" data-public-value="medecins">Médecins</button>
+          <button type="button" class="public-pill" data-public-value="infirmiers">Infirmiers</button>
+          <button type="button" class="public-pill" data-public-value="pharmaciens">Pharmaciens</button>
+          <button type="button" class="public-pill" data-public-value="sages-femmes">Sages-femmes</button>
+          <button type="button" class="public-pill" data-public-value="kines">Kinésithérapeutes</button>
+          <button type="button" class="public-pill" data-public-value="dentistes">Dentistes</button>
+        </div>
       </div>
 
-      <div class="filter-group">
-        <label for="filter-format">Format</label>
-        <select id="filter-format">
-          <option value="">Tous</option>
-        </select>
-      </div>
+      <section class="filters-block filters-block-secondary">
+        <div class="filters-block-head">
+          <h2 class="filters-block-title">Affiner les résultats</h2>
+          <p class="filters-block-text">Affinez ensuite avec une spécialité, un format, une typologie ou une recherche libre.</p>
+        </div>
 
-      <div class="filter-group">
-        <label for="filter-public">Public concerné</label>
-        <select id="filter-public">
-          <option value="">Tous</option>
-        </select>
-      </div>
+        <div class="filters-grid filters-grid-secondary">
+          <div class="filter-group filter-group-dependent">
+            <label for="filter-specialty">Spécialité médicale</label>
+            <select id="filter-specialty" disabled>
+              <option value="">Sélectionner “Médecins” d’abord</option>
+            </select>
+            <p class="filter-helper" id="specialty-helper">
+              Disponible pour le public Médecins.
+            </p>
+          </div>
 
-      <div class="filter-group">
-        <label for="filter-typologie">Typologie</label>
-        <select id="filter-typologie">
-          <option value="">Toutes</option>
-        </select>
+          <div class="filter-group">
+            <label for="filter-format">Format</label>
+            <select id="filter-format">
+              <option value="">Tous</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-typologie">Typologie</label>
+            <select id="filter-typologie">
+              <option value="">Toutes</option>
+            </select>
+          </div>
+
+          <div class="filter-group filter-search">
+            <label for="search">Recherche</label>
+            <div class="search-input-wrap">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input
+                type="text"
+                id="search"
+                placeholder="Titre, dépôt, contexte..."
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="filters-actions">
+        <button type="button" class="reset-filters-button" id="reset-filters">
+          Réinitialiser les filtres
+        </button>
       </div>
     </section>
 
