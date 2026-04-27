@@ -849,11 +849,13 @@ function updateSpecialtyFilterOptions() {
   const familySelect = document.getElementById("filter-public-family");
   const specialtyGroup = document.getElementById("specialty-filter-group");
   const specialtySelect = document.getElementById("filter-specialty");
+  const specialtyHelper = document.getElementById("specialty-helper");
 
   if (familySelect.value !== "medecins") {
-    specialtyGroup.classList.add("is-hidden");
-    specialtySelect.innerHTML = `<option value="">Toutes</option>`;
+    specialtySelect.disabled = true;
+    specialtySelect.innerHTML = `<option value="">Sélectionner “Médecins” d’abord</option>`;
     specialtySelect.value = "";
+    specialtyHelper.textContent = "Disponible pour le public Médecins.";
     return;
   }
 
@@ -864,7 +866,7 @@ function updateSpecialtyFilterOptions() {
     })
   )].sort((a, b) => a.localeCompare(b, "fr"));
 
-  specialtyGroup.classList.remove("is-hidden");
+  specialtySelect.disabled = false;
   specialtySelect.innerHTML = `<option value="">Toutes</option>`;
 
   specialties.forEach(value => {
@@ -873,13 +875,19 @@ function updateSpecialtyFilterOptions() {
     option.textContent = value.replace(/^Médecin\s-\s/, "");
     specialtySelect.appendChild(option);
   });
+
+  specialtyHelper.textContent = "Affiché car le public “Médecins” est sélectionné.";
+}
+
+function createResultsCountText(count) {
+  return `${count} formation${count > 1 ? "s" : ""} affichée${count > 1 ? "s" : ""}`;
 }
 
 function renderCards(data) {
   const results = document.getElementById("results");
   const resultsCount = document.getElementById("results-count");
 
-  resultsCount.textContent = `${data.length} formation${data.length > 1 ? "s" : ""} affichée${data.length > 1 ? "s" : ""}`;
+  resultsCount.textContent = createResultsCountText(data.length);
 
   if (!data.length) {
     results.innerHTML = `
@@ -1103,11 +1111,21 @@ function applyFilters() {
   renderCards(filtered);
 }
 
+function resetFilters() {
+  document.getElementById("search").value = "";
+  document.getElementById("filter-public-family").value = "";
+  document.getElementById("filter-format").value = "";
+  document.getElementById("filter-typologie").value = "";
+  updateSpecialtyFilterOptions();
+  applyFilters();
+}
+
 function initFilters(data) {
   const formatSelect = document.getElementById("filter-format");
   const typologieSelect = document.getElementById("filter-typologie");
   const familySelect = document.getElementById("filter-public-family");
   const specialtySelect = document.getElementById("filter-specialty");
+  const resetButton = document.getElementById("reset-filters");
 
   const formats = [...new Set(
     data.map(item => formatLabel(getField(item, ["Format (ANDPC)", "Format ANDPC"]))).filter(Boolean)
@@ -1133,7 +1151,8 @@ function initFilters(data) {
     typologieSelect.appendChild(option);
   });
 
-  specialtySelect.innerHTML = `<option value="">Toutes</option>`;
+  specialtySelect.innerHTML = `<option value="">Sélectionner “Médecins” d’abord</option>`;
+  specialtySelect.disabled = true;
 
   document.getElementById("search").addEventListener("input", applyFilters);
 
@@ -1145,6 +1164,17 @@ function initFilters(data) {
   specialtySelect.addEventListener("change", applyFilters);
   formatSelect.addEventListener("change", applyFilters);
   typologieSelect.addEventListener("change", applyFilters);
+  resetButton.addEventListener("click", resetFilters);
+}
+
+function loadSubtitleDates(response, rawData) {
+  const lastModifiedHeader = response.headers.get("last-modified");
+  const lastModifiedDate = lastModifiedHeader ? new Date(lastModifiedHeader) : null;
+  const usableLastModifiedDate =
+    lastModifiedDate && !Number.isNaN(lastModifiedDate.getTime()) ? lastModifiedDate : null;
+
+  const exportDate = findExportDateInData(rawData);
+  setSubtitle(exportDate, usableLastModifiedDate);
 }
 
 async function loadCatalogue() {
@@ -1156,20 +1186,13 @@ async function loadCatalogue() {
 
     const csvText = await response.text();
 
-    const lastModifiedHeader = response.headers.get("last-modified");
-    const lastModifiedDate = lastModifiedHeader ? new Date(lastModifiedHeader) : null;
-    const usableLastModifiedDate =
-      lastModifiedDate && !Number.isNaN(lastModifiedDate.getTime()) ? lastModifiedDate : null;
-
     const parsed = Papa.parse(csvText, {
       header: true,
       skipEmptyLines: true
     });
 
     const rawData = parsed.data || [];
-    const exportDate = findExportDateInData(rawData);
-
-    setSubtitle(exportDate, usableLastModifiedDate);
+    loadSubtitleDates(response, rawData);
 
     catalogue = rawData.filter(item => {
       const commercialisation = cleanNotionText(getField(item, ["Commercialisation"]));
