@@ -1207,25 +1207,24 @@ catalogue = rawData
     return commercialisation.toLowerCase().includes("commercialisée");
   })
   .sort((a, b) => {
-    const titleA = cleanNotionText(getField(a, [
-      "Thématiques 2628",
-      "Intitulé de l'action",
-      "Intitulé",
-      "Nom",
-      "Name",
-      "Titre",
-      "Title"
-    ]));
+    const getSortableTitle = (item) => {
+      const rawTitle = cleanNotionText(getField(item, [
+        "Thématiques 2628",
+        "Intitulé de l'action",
+        "Intitulé",
+        "Nom",
+        "Name",
+        "Titre",
+        "Title"
+      ]));
 
-    const titleB = cleanNotionText(getField(b, [
-      "Thématiques 2628",
-      "Intitulé de l'action",
-      "Intitulé",
-      "Nom",
-      "Name",
-      "Titre",
-      "Title"
-    ]));
+      return rawTitle
+        .replace(/^\s*\[[^\]]+\]\s*/g, "")
+        .trim();
+    };
+
+    const titleA = getSortableTitle(a);
+    const titleB = getSortableTitle(b);
 
     return titleA.localeCompare(titleB, "fr", { sensitivity: "base" });
   });
