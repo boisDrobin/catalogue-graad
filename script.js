@@ -248,6 +248,7 @@ function getPublicBadge(publics) {
   const medicalBadgeByNormalizedLabel = {
     "generaliste": "Médecin - Généraliste",
     "generalistes": "Médecin - Généraliste",
+    "medecine generale": "Médecin - Médecine générale",
     "cardiologie": "Médecin - Cardiologie",
     "cardiologue": "Médecin - Cardiologie",
     "cardiologues": "Médecin - Cardiologie",
