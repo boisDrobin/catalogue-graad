@@ -228,11 +228,61 @@ function getInfoIcon(label) {
 function getPublicBadge(publics) {
   if (!publics || !publics.length) return "";
 
-  if (publics.length === 1) {
-    return publics[0];
+  const cleaned = publics
+    .map(v => cleanNotionText(v))
+    .filter(Boolean);
+
+  if (cleaned.length === 1) {
+    return cleaned[0];
   }
 
-  return "Mixte";
+  const normalized = cleaned.map(v =>
+    v
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[’']/g, "'")
+      .replace(/-/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+
+  const hasOnlyValues = (expectedValues) => {
+    const expected = expectedValues.map(v =>
+      v
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[’']/g, "'")
+        .replace(/-/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+    );
+
+    if (normalized.length !== expected.length) return false;
+
+    return expected.every(value => normalized.includes(value));
+  };
+
+  if (
+    hasOnlyValues([
+      "Gynécologie médicale",
+      "Gynécologie obstétrique"
+    ])
+  ) {
+    return "Gynécologie";
+  }
+
+  if (
+    hasOnlyValues([
+      "Pharmacien titulaire d'officine",
+      "Pharmacien adjoint d'officine"
+    ])
+  ) {
+    return "Pharmacien";
+  }
+
+  return "Public Mixte";
 }
 
 function getPublicBadgeClass(label) {
