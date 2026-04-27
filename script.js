@@ -1206,10 +1206,10 @@ async function loadCatalogue() {
       return commercialisation.toLowerCase().includes("commercialisée");
     });
 
-    initFilters(catalogue);
-    syncPublicButtons();
-    updateSpecialtyFilterOptions();
-    renderCards(catalogue);
+initFilters(catalogue);
+syncPublicButtons();
+updateSpecialtyFilterOptions();
+applyFilters();
   } catch (error) {
     console.error(error);
     document.getElementById("results").innerHTML = `
