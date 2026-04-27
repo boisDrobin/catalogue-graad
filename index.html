@@ -56,80 +56,35 @@
   </header>
 
   <main class="container">
-    <section class="filters-panel">
-      <div class="filters-layout">
-        <section class="filters-block filters-block-primary">
-          <div class="filters-block-head">
-            <h2 class="filters-block-title">Ciblage métier</h2>
-            <p class="filters-block-text">Choisissez d’abord un public, puis affinez si besoin avec une spécialité médicale.</p>
-          </div>
-
-          <div class="filters-grid filters-grid-primary">
-            <div class="filter-group">
-              <label for="filter-public-family">Public</label>
-              <select id="filter-public-family">
-                <option value="">Tous</option>
-                <option value="medecins">Médecins</option>
-                <option value="infirmiers">Infirmiers</option>
-                <option value="pharmaciens">Pharmaciens</option>
-                <option value="sages-femmes">Sages-femmes</option>
-                <option value="kines">Kinésithérapeutes</option>
-                <option value="dentistes">Dentistes</option>
-              </select>
-            </div>
-
-            <div class="filter-group filter-group-dependent" id="specialty-filter-group">
-              <label for="filter-specialty">Spécialité médicale</label>
-              <select id="filter-specialty" disabled>
-                <option value="">Sélectionner “Médecins” d’abord</option>
-              </select>
-              <p class="filter-helper" id="specialty-helper">
-                Disponible pour le public Médecins.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section class="filters-block">
-          <div class="filters-block-head">
-            <h2 class="filters-block-title">Affiner les résultats</h2>
-            <p class="filters-block-text">Appliquez ensuite des filtres complémentaires ou une recherche libre.</p>
-          </div>
-
-          <div class="filters-grid filters-grid-secondary">
-            <div class="filter-group">
-              <label for="filter-format">Format</label>
-              <select id="filter-format">
-                <option value="">Tous</option>
-              </select>
-            </div>
-
-            <div class="filter-group">
-              <label for="filter-typologie">Typologie</label>
-              <select id="filter-typologie">
-                <option value="">Toutes</option>
-              </select>
-            </div>
-
-            <div class="filter-group filter-search">
-              <label for="search">Recherche libre</label>
-              <div class="search-input-wrap">
-                <span class="search-icon" aria-hidden="true">⌕</span>
-                <input
-                  type="text"
-                  id="search"
-                  placeholder="Titre, dépôt, contexte..."
-                >
-              </div>
-            </div>
-          </div>
-        </section>
+    <section class="filters">
+      <div class="filter-group filter-search">
+        <label for="search">Recherche</label>
+        <input
+          type="text"
+          id="search"
+          placeholder="Rechercher par titre, numéro, public, contexte..."
+        >
       </div>
 
-      <div class="filters-actions">
-        <button type="button" class="reset-filters-button" id="reset-filters">
-          Réinitialiser les filtres
-        </button>
+      <div class="filter-group">
+        <label for="filter-format">Format</label>
+        <select id="filter-format">
+          <option value="">Tous</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-public">Public concerné</label>
+        <select id="filter-public">
+          <option value="">Tous</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="filter-typologie">Typologie</label>
+        <select id="filter-typologie">
+          <option value="">Toutes</option>
+        </select>
       </div>
     </section>
 
