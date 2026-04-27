@@ -418,6 +418,47 @@ h1 {
   color: #665f54;
   border-color: #e7dece;
 }
+.badge-public-mixte {
+  background: #f5f3ff;
+  color: #6d28d9;
+  border-color: #ddd6fe;
+}
+
+.badge-public-dentaire {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+.badge-public-ide {
+  background: #ecfeff;
+  color: #0f766e;
+  border-color: #a5f3fc;
+}
+
+.badge-public-kine {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fdba74;
+}
+
+.badge-public-pharmacien {
+  background: #f0fdf4;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+
+.badge-public-sagefemme {
+  background: #fdf2f8;
+  color: #be185d;
+  border-color: #fbcfe8;
+}
+
+.badge-public-default {
+  background: #f4efdf;
+  color: #7f703f;
+  border-color: #e6dcc0;
+}
 
 .card-toggle {
   display: inline-flex;
